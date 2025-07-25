@@ -1,0 +1,15 @@
+{% extends "Layouts/base.html.twig" %}
+
+{% block title %}Home{% endblock %}
+{% block head %}
+    {{ parent() }}
+    <style>
+        .important { color: #336699; }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <h1>Bienvenue sur Home !</h1>
+<p> c'est qui le chef raw ? {{ chef|raw }}</p>
+    <p> c'est qui le chef ? {{ chef }}</p>
+{% endblock %}

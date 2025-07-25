@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    {% block head %}
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="/Css/BodyStyle.css">
+        <link rel="stylesheet" href="/Css/HeaderFooter/HeaderStyle.css">
+        <link rel="stylesheet" href="/Css/HeaderFooter/NavbarStyle.css">
+        <link rel="stylesheet" href="/Css/HeaderFooter/FooterStyle.css">
+
+        <title>{% block title %}{% endblock %} - My Webpage</title>
+<body>
+    <!-- Inclure l'en-tête -->
+    {% include 'Partials/header.html.twig' %}
+    {% endblock %}
+</head>
+<body>
+<div id="content">{% block content %}{% endblock %}</div>
+<div id="footer">
+    {% block footer %}
+        <!-- Inclure le pied de page -->
+        {% include 'Partials/footer.html.twig' %}
+    {% endblock %}
+</div>
+</body>
+</html>
+

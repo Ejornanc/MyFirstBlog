@@ -1,0 +1,25 @@
+{
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Alexandre Delcroix",
+            "email": "delcroix.alx@gmail.fr"
+        }
+    ],
+    "require": {
+        "altorouter/altorouter": "^2.0",
+        "twig/twig": "^3.21.1",
+        "ext-pdo": "*"
+    },
+
+    "require-dev": {
+        "symfony/var-dumper": "^7.3.1",
+        "phpunit/phpunit": "^10.5",
+        "friendsofphp/php-cs-fixer": "^3.58",
+        "phpstan/phpstan": "^1.11"
+    }
+}
