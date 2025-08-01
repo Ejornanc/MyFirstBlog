@@ -21,10 +21,18 @@ class ArticleModel
         $query->execute([
             "id" => $id,
         ]);
-        $query->setFetchMode(PDO::FETCH_CLASS, Article::class);
-        $article = $query->fetch();
-
-        return $article ?: null;
+        $query->setFetchMode(PDO::FETCH_ASSOC);
+        $articleData = $query->fetch();
+        if (!$articleData){
+            return null;
+        }
+        $article = new Article();
+        $article
+            ->setId($articleData['id'])
+            ->setTitle($articleData['title'])
+            ->setContent($articleData['content'])
+            ->setDate($articleData['date']);
+        return $article ;
     }
 
     public function getAllArticles(){

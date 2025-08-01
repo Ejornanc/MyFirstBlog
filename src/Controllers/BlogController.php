@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Controllers;
+use App\Entity\Article;
 use App\Models\ArticleModel;
 
 class BlogController extends ParentController
@@ -24,14 +25,13 @@ class BlogController extends ParentController
     {
         $model = new ArticleModel();
         $article = $model->getArticle($id); // Récupère l'article par ID
-
         if (!$article) {
             // Gérer le cas où l'article n'existe pas
             echo "Article non trouvé.";
             exit;
         }
 
-        $this->render('article', [
+        $this->render('Blog/Show_Blog', [
             'article' => $article, // Passer l'article à la vue
         ]);
     }
@@ -42,11 +42,11 @@ class BlogController extends ParentController
 
         // Ajouter les URLs aux articles
         foreach ($articles as $article) {
-            $article->url = "/article/" . $article->getSlug() . "-" . $article->getId(); // Crée l'URL pour chaque article
+            $article->url = "/Blog/" . $article->getSlug() . "-" . $article->getId(); // Crée l'URL pour chaque article
         }
 
         // Passer les articles avec l'URL à la vue
-        $this->render('articles', [
+        $this->render('Blog/Index_Blog', [
             "articles" => $articles,
         ]);
     }

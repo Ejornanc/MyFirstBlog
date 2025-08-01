@@ -19,9 +19,8 @@ class Router
         $router->map('GET', '/suite', [$blogController, 'suite']);
         $router->map('GET', '/demo', [$blogController, 'demo']);
         $router->map('GET', '/contact', [$blogController, 'contact']);
-        $router->map('GET', '/article/[*:slug]-[i:id]', [$blogController, 'article'], 'article');
+        $router->map('GET', '/Blog/[*:slug]-[i:id]', [$blogController, 'article'], 'article');
         $router->map('GET', '/error', [$errorController, 'error404']);
-        // $router->map('GET', '/article', [$blogController, 'article']);
-        $router->map('GET', '/articles', [$blogController, 'articles']);
+        $router->map('GET', '/Blog', [$blogController, 'articles']);
     }
 }
