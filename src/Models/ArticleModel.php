@@ -21,8 +21,9 @@ class ArticleModel
         $query->execute([
             "id" => $id,
         ]);
-        $query->setFetchMode(PDO::FETCH_CLASS, Article::class);
+        $query->setFetchMode(PDO::FETCH_ASSOC);
         $article = $query->fetch();
+        dd($article);
 
         return $article ?: null;
     }
@@ -30,10 +31,19 @@ class ArticleModel
     public function getAllArticles(){
         $query = $this->pdo->prepare("SELECT * FROM article");
         $query->execute();
-        $query->setFetchMode(PDO::FETCH_CLASS, Article::class);
-        $articles = $query->fetchAll();  // Utilisation de fetchAll() pour récupérer tous les articles
+        $query->setFetchMode(PDO::FETCH_ASSOC);
+        $articlesDb = $query->fetchAll();  // Utilisation de fetchAll() pour récupérer tous les articles
+        $articles = [];
+        foreach ($articlesDb as $articleDb) {
+            $article = new Article();
+            $article->setId($articleDb['id'])
+                ->setTitle($articleDb['title'])
+                ->setContent($articleDb['content'])
+                ->setDateFromString($articleDb['date']);
+            $articles[] = $article;
+        }
 
-        return $articles ?: [];  // Retourne un tableau vide si aucun article n'est trouvé
+        return $articles;
     }
 
 }
