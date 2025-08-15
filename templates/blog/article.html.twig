@@ -1,0 +1,90 @@
+{% extends "Layouts/base.html.twig" %}
+
+{% block title %}{{ article.title }} - Blog Professionnel{% endblock %}
+{% block head %}
+    {{ parent() }}
+        <link rel="stylesheet" href="/Css/Blog.css">
+{% endblock %}
+
+{% block content %}
+    <div class="article-container">
+        <div class="article-header">
+            <h1 class="article-title">{{ article.title }}</h1>
+            <div class="article-meta">
+                Par {{ article.author }} | 
+                {% if article.updatedAt %}
+                    Dernière modification: {{ article.updatedAt|date("d/m/Y H:i") }}
+                {% else %}
+                    Publié le: {{ article.date|date("d/m/Y H:i") }}
+                {% endif %}
+            </div>
+        </div>
+        
+        {% if article.chapo %}
+            <div class="article-chapo">
+                {{ article.chapo }}
+            </div>
+        {% endif %}
+        
+        <div class="article-content">
+            {{ article.content|raw }}
+        </div>
+        
+        {% if user and user.role == 'admin' %}
+            <div class="admin-actions">
+                <a href="/admin/article/edit/{{ article.id }}" class="btn btn-primary">Modifier</a>
+                <a href="/admin/article/delete/{{ article.id }}" class="btn btn-danger">Supprimer</a>
+            </div>
+        {% endif %}
+        
+        <div class="comments-section">
+            <h3>Commentaires</h3>
+            
+            {% if comments|length > 0 %}
+                {% for comment in comments %}
+                    <div class="comment">
+                        <div class="comment-author">{{ comment.author }}</div>
+                        <div class="comment-date">{{ comment.date|date("d/m/Y H:i") }}</div>
+                        <div class="comment-content mt-2">{{ comment.content }}</div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>Aucun commentaire pour le moment.</p>
+            {% endif %}
+            
+            <div class="comment-form">
+                <h4>Ajouter un commentaire</h4>
+                
+                {% if commentSuccess %}
+                    <div class="alert alert-success">
+                        Votre commentaire a été soumis et sera publié après validation.
+                    </div>
+                {% endif %}
+                
+                {% if errors|length > 0 %}
+                    <div class="alert alert-danger">
+                        <ul>
+                            {% for error in errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+                
+                <form method="post">
+                    <div class="form-group mb-3">
+                        <label for="author">Nom</label>
+                        <input type="text" class="form-control" id="author" name="author" required>
+                    </div>
+                    
+                    <div class="form-group mb-3">
+                        <label for="content">Commentaire</label>
+                        <textarea class="form-control" id="content" name="content" rows="4" required></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">Soumettre</button>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

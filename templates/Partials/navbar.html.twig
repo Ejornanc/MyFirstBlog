@@ -1,9 +1,14 @@
 <nav>
     <ul class="navbar">
         <li><a href="/">Accueil</a></li>
-        <li><a href="/suite">Suite</a></li>
-        <li><a href="/demo">Demo</a></li>
-        <li><a href="/articles">articles</a></li>
-        <li><a href="/contact">Nous Contacter</a></li>
+        <li><a href="/articles">Articles</a></li>
+        <li><a href="/#contact">Contact</a></li>
+        {% if user %}
+            <li><a href="/profile">Mon Profil</a></li>
+            <li><a href="/logout">Déconnexion</a></li>
+        {% else %}
+            <li><a href="/login">Connexion</a></li>
+            <li><a href="/register">Inscription</a></li>
+        {% endif %}
     </ul>
 </nav>

@@ -1,0 +1,51 @@
+{% extends "Layouts/base.html.twig" %}
+
+{% block title %}Articles - Blog Professionnel{% endblock %}
+{% block head %}
+    {{ parent() }}
+        <link rel="stylesheet" href="Css/Blog.css"
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h1 class="text-center mb-5">Articles du Blog</h1>
+        
+        {% if articles|length > 0 %}
+            <div class="article-list">
+                {% for article in articles %}
+                    <div class="article-card">
+                        <h2 class="article-title">{{ article.title }}</h2>
+                        <div class="article-meta-index">
+                            {% if article.updatedAt %}
+                                Dernière modification: {{ article.updatedAt|date("d/m/Y H:i") }}
+                            {% else %}
+                                Publié le: {{ article.date|date("d/m/Y H:i") }}
+                            {% endif %}
+                            {% if article.author %}
+                                | Par: {{ article.author }}
+                            {% endif %}
+                        </div>
+                        <div class="article-chapo-index">
+                            {% if article.chapo %}
+                                {{ article.chapo }}
+                            {% else %}
+                                {{ article.content|striptags|slice(0, 150) }}{% if article.content|length > 150 %}...{% endif %}
+                            {% endif %}
+                        </div>
+                        <a href="{{ article.url }}" class="article-link">Lire la suite</a>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="alert alert-info">
+                Aucun article n'a été publié pour le moment.
+            </div>
+        {% endif %}
+        
+        {% if user and user.role == 'admin' %}
+            <div class="text-center mt-4">
+                <a href="/admin/article/add" class="btn btn-success">Ajouter un article</a>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

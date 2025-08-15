@@ -1,9 +1,9 @@
 <header class="main-header">
     <div class="logo">
         <a href="/"><img src="/../Images/LogoPersoTransparent.png" alt="Site Logo"></a>
+        <h1>Alexandre Delcroix</h1>
     </div>
-    <h1>Alexandre Delcroix</h1>
     <div class="navbar-container">
-        {% include 'Partials/navbar.html.twig' %}
+        {% include 'Partials/navbar.html.twig' with {'user': user|default(null)} %}
     </div>
 </header>

@@ -1,26 +1,69 @@
-{% extends 'Layouts/base.html.twig' %}
-
-{% block title %}Contact{% endblock %}
+{% block head %}
+        <link rel="stylesheet" href="Css/ContactForm.css">
+{% endblock %}
 
 {% block content %}
-<div class="container">
-    <h1>Contact Us</h1>
-    <p>This is the contact page. You can reach us at contact@example.com.</p>
-    
-    <form>
-        <div class="form-group">
-            <label for="name">Name</label>
-            <input type="text" class="form-control" id="name" placeholder="Enter your name">
+    <div class="container">
+        <div class="contact-container">
+            <h1 class="contact-title">Contactez-moi</h1>
+            
+            <div class="contact-form">
+                {% if success %}
+                    <div class="alert alert-success">
+                        Votre message a été envoyé avec succès. Je vous répondrai dès que possible.
+                    </div>
+                {% endif %}
+                
+                {% if errors|length > 0 %}
+                    <div class="alert alert-danger">
+                        <ul>
+                            {% for error in errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+                
+                <form method="post" action="/contact">
+                    <div class="form-group">
+                        <label for="name">Nom / Prénom</label><br>
+                        <input type="text" class="form-control" id="name" name="name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Email</label><br>
+                        <input type="email" class="form-control" id="email" name="email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="message">Message</label><br>
+                        <textarea class="form-control" id="message" name="message" rows="5" required></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary w-100">Envoyer</button>
+                </form>
+            </div>
+            
+            <div class="contact-info">
+                <h3>Retrouvez-moi également sur</h3>
+                
+                <div class="social-links">
+                    {% if personalInfo.socialLinks.github %}
+                        <a href="{{ personalInfo.socialLinks.github }}" target="_blank">
+                            <img src="/../Images/github-black.png" alt="GitHub" style="width:100px; height:auto;">
+                        </a>
+                    {% endif %}
+                    {% if personalInfo.socialLinks.linkedin %}
+                        <a href="{{ personalInfo.socialLinks.linkedin }}" target="_blank">
+                            <img src="/../Images/linkedin.png" alt="GitHub" style="width:100px; height:auto;">
+                        </a>
+                    {% endif %}
+                </div>
+                
+                <div class="cv-link">
+                    <a href="/assets/cv.pdf" class="btn btn-outline-primary" target="_blank">Télécharger mon CV</a>
+                </div>
+            </div>
         </div>
-        <div class="form-group">
-            <label for="email">Email</label>
-            <input type="email" class="form-control" id="email" placeholder="Enter your email">
-        </div>
-        <div class="form-group">
-            <label for="message">Message</label>
-            <textarea class="form-control" id="message" rows="5" placeholder="Enter your message"></textarea>
-        </div>
-        <button type="submit" class="btn btn-primary">Submit</button>
-    </form>
-</div>
+    </div>
 {% endblock %}

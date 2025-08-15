@@ -1,0 +1,47 @@
+.auth-container {
+    max-width: 500px;
+    margin: 50px auto;
+    padding: 30px;
+    background-color: #f8f9fa;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+.auth-title {
+    text-align: center;
+    margin-bottom: 30px;
+}
+.form-group {
+    text-align: center;
+    margin-bottom: 20px;
+}
+.auth-footer {
+    text-align: center;
+    margin-top: 20px;
+}
+.profile-container {
+    max-width: 700px;
+    margin: 50px auto;
+    padding: 30px;
+    background-color: #f8f9fa;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+.profile-title {
+    text-align: center;
+    margin-bottom: 30px;
+}
+.profile-info {
+    margin-bottom: 30px;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 5px;
+}
+.profile-info-title {
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #dee2e6;
+}
+.profile-actions {
+    margin-top: 30px;
+    text-align: center;
+}

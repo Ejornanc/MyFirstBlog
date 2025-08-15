@@ -11,8 +11,11 @@ class Article
 {
     private ?int $id = null;
     private ?string $title = null;
+    private ?string $chapo = null;
     private ?string $content = null;
+    private ?string $author = null;
     private ?DateTimeInterface $date = null;
+    private ?DateTimeInterface $updatedAt = null;
     private ?string $slug = null;
     private ?bool $actif = false;
 
@@ -93,4 +96,43 @@ class Article
         return $this;
     }
 
+    public function getChapo(): ?string
+    {
+        return $this->chapo;
+    }
+
+    public function setChapo(?string $chapo): static
+    {
+        $this->chapo = $chapo;
+        return $this;
+    }
+
+    public function getAuthor(): ?string
+    {
+        return $this->author;
+    }
+
+    public function setAuthor(?string $author): static
+    {
+        $this->author = $author;
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?DateTimeInterface
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(?DateTimeInterface $updatedAt): static
+    {
+        $this->updatedAt = $updatedAt;
+        return $this;
+    }
+
+    public function setUpdatedAtFromString(?string $date): self
+    {
+        $date = DateTime::createFromFormat('Y-m-d H:i:s', $date);
+        $date = $date instanceof DateTimeInterface ? $date : null;
+        return $this->setUpdatedAt($date);
+    }
 }

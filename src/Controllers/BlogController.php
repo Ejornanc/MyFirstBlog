@@ -5,51 +5,68 @@ use App\Models\ArticleModel;
 
 class BlogController extends ParentController
 {
-    public function home(){
-        $this->render('home', ["chef" => "<h1>c'est moi</h1>"]);
+    private ArticleModel $articleModel;
+    
+    public function __construct()
+    {
+        $this->articleModel = new ArticleModel();
     }
+    
+    public function articles()
+    {
+        $articles = $this->articleModel->getAllArticles();
 
-    public function suite(){
-        $this->render('suite');
-    }
-    public function demo(){
-        $this->render('demo');
-    }
+        // Add URLs to articles
+        foreach ($articles as $article) {
+            $article->url = "/article/" . $article->getSlug() . "-" . $article->getId();
+        }
 
-    public function contact(){
-        $this->render('contact');
+        $this->render('blog/articles', [
+            "articles" => $articles,
+            "user" => \App\Middleware\AuthMiddleware::getUser(),
+        ]);
     }
 
     public function article($slug, $id)
     {
-        $model = new ArticleModel();
-        $article = $model->getArticle($id); // Récupère l'article par ID
+        $article = $this->articleModel->getArticle($id);
+        $errors = [];
+        $commentSuccess = false;
 
         if (!$article) {
-            // Gérer le cas où l'article n'existe pas
-            echo "Article non trouvé.";
+            header('Location: /error404');
             exit;
         }
-
-        $this->render('article', [
-            'article' => $article, // Passer l'article à la vue
-        ]);
-    }
-
-    public function articles(){
-        $model = new ArticleModel();
-        $articles = $model->getAllArticles();
-
-        // Ajouter les URLs aux articles
-        foreach ($articles as $article) {
-            $article->url = "/article/" . $article->getSlug() . "-" . $article->getId(); // Crée l'URL pour chaque article
+        
+        // Handle comment submission
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $author = $_POST['author'] ?? '';
+            $content = $_POST['content'] ?? '';
+            
+            // Validate inputs
+            if (empty($author)) {
+                $errors[] = 'Name is required';
+            }
+            
+            if (empty($content)) {
+                $errors[] = 'Comment is required';
+            }
+            
+            // If no errors, save the comment (to be implemented with CommentModel)
+            if (empty($errors)) {
+                // For now, just show success message
+                // In a real implementation, we would save to database
+                $commentSuccess = true;
+            }
         }
 
-        // Passer les articles avec l'URL à la vue
-        $this->render('articles', [
-            "articles" => $articles,
+        $this->render('blog/article', [
+            'article' => $article,
+            'user' => \App\Middleware\AuthMiddleware::getUser(),
+            'errors' => $errors,
+            'commentSuccess' => $commentSuccess,
+            // In a real implementation, we would fetch comments from database
+            'comments' => [],
         ]);
     }
-
-
 }

@@ -1,15 +1,40 @@
 {% extends "Layouts/base.html.twig" %}
 
-{% block title %}Home{% endblock %}
+{% block title %}Accueil - Blog Professionnel{% endblock %}
 {% block head %}
     {{ parent() }}
-    <style>
-        .important { color: #336699; }
-    </style>
+        <link rel="stylesheet" href="Css/Home.css">
 {% endblock %}
 
 {% block content %}
-    <h1>Bienvenue sur Home !</h1>
-<p> c'est qui le chef raw ? {{ chef|raw }}</p>
-    <p> c'est qui le chef ? {{ chef }}</p>
+    <div class="hero-section">
+        <img src="/../Images/LogoPersoTransparent.png" alt="{{ personalInfo.name }}" class="profile-image">
+        <h1>{{ personalInfo.firstName }} {{ personalInfo.lastName }}</h1>
+        <p class="tagline">{{ personalInfo.tagline }}</p>
+        
+        <div class="social-links">
+            {% if personalInfo.socialLinks.github %}
+                <a href="{{ personalInfo.socialLinks.github }}" target="_blank">
+                    <img src="/../Images/github-black.png" alt="GitHub" style="width:100px; height:auto;">
+                </a>
+            {% endif %}
+            
+            {% if personalInfo.socialLinks.linkedin %}
+                <a href="{{ personalInfo.socialLinks.linkedin }}" target="_blank">
+                    <img src="/../Images/linkedin.png" alt="GitHub" style="width:100px; height:auto;">
+                </a>
+            {% endif %}
+
+        </div>
+
+        {# Texte de remplissage pour simuler une longue page #}
+        {% for i in 1..30 %}
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nisl nec tincidunt luctus, nunc elit lacinia augue, vel mattis ligula lorem a risus. (Paragraphe {{ i }})</p>
+        {% endfor %}
+
+        <section id="contact">
+            {% include "contact.html.twig" with { 'is_include': true } %}
+        </section>
+
+    </div>
 {% endblock %}

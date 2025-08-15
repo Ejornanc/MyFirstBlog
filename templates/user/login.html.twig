@@ -1,0 +1,46 @@
+{% extends "Layouts/base.html.twig" %}
+
+{% block title %}Connexion - Blog Professionnel{% endblock %}
+{% block head %}
+    {{ parent() }}
+        <link rel="stylesheet" href="Css/User.css">
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="auth-container">
+            <h2 class="auth-title">Connexion</h2>
+            
+            {% if errors|length > 0 %}
+                <div class="alert alert-danger">
+                    <ul>
+                        {% for error in errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+            
+            <form method="post">
+                <div class="form-group">
+                    <label for="email">Email</label><br>
+                    <input type="email" class="form-control" id="email" name="email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Mot de passe</label><br>
+                    <input type="password" class="form-control" id="password" name="password" required>
+                </div>
+
+                <div class="form-group">
+                <button type="submit" class="btn btn-primary w-100">Se connecter</button>
+                </div>
+
+            </form>
+            
+            <div class="auth-footer">
+                Vous n'avez pas de compte ? <a href="/register">Inscrivez-vous</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,45 @@
+{% extends "Layouts/base.html.twig" %}
+
+{% block title %}Supprimer un article - Administration{% endblock %}
+{% block head %}
+    {{ parent() }}
+        <link rel="stylesheet" href="/Css/Admin.css">
+{% endblock %}
+
+{% block content %}
+    <div class="admin-header">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <h1 class="admin-title">Supprimer un article</h1>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <a href="/admin/dashboard" class="btn btn-outline-light">Retour au tableau de bord</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="delete-container">
+            <h2>Êtes-vous sûr de vouloir supprimer cet article ?</h2>
+            <p class="delete-warning">Cette action est irréversible !</p>
+            
+            <div class="article-info">
+                <h3>{{ article.title }}</h3>
+                <p><strong>Auteur :</strong> {{ article.author }}</p>
+                <p><strong>Date de création :</strong> {{ article.date|date("d/m/Y H:i") }}</p>
+                {% if article.chapo %}
+                    <p><strong>Chapô :</strong> {{ article.chapo }}</p>
+                {% endif %}
+            </div>
+            
+            <div class="action-buttons">
+                <form method="post">
+                    <a href="/admin/dashboard" class="btn btn-secondary">Annuler</a>
+                    <button type="submit" class="btn btn-danger">Confirmer la suppression</button>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
