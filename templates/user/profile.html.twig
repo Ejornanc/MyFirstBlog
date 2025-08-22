@@ -3,7 +3,8 @@
 {% block title %}Mon Profil - Blog Professionnel{% endblock %}
 {% block head %}
     {{ parent() }}
-        <link rel="stylesheet" href="Css/User.css">
+        <link rel="stylesheet" href="/Css/User.css">
+        <link rel="stylesheet" href="/Css/Formulaire.css">
 {% endblock %}
 
 {% block content %}
@@ -27,7 +28,7 @@
                 </div>
             {% endif %}
             
-            <div class="profile-info">
+            <div class="form-container">
                 <h3 class="profile-info-title">Informations personnelles</h3>
                 
                 <form method="post">
