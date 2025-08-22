@@ -48,8 +48,6 @@
                             <th>Titre</th>
                             <th>Auteur</th>
                             <th>Date de création</th>
-                            <th>Dernière modification</th>
-                            <th>Statut</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -58,15 +56,8 @@
                             <tr>
                                 <td>{{ article.id }}</td>
                                 <td>{{ article.title }}</td>
-                                <td>{{ article.author }}</td>
+                                <td>{{ article.username ?? article.username ?? 'Anonyme' }}</td>
                                 <td>{{ article.date|date("d/m/Y H:i") }}</td>
-                                <td>
-                                    {% if article.updatedAt %}
-                                        {{ article.updatedAt|date("d/m/Y H:i") }}
-                                    {% else %}
-                                        -
-                                    {% endif %}
-                                </td>
                                 <td>
                                     {% if article.actif %}
                                         <span class="status-badge status-active">Actif</span>

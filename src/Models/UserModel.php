@@ -66,8 +66,8 @@ class UserModel
         $hashedPassword = password_hash($user->getPassword(), PASSWORD_DEFAULT);
         
         $query = $this->pdo->prepare("
-            INSERT INTO user (username, email, password, role, created_at, is_active) 
-            VALUES (:username, :email, :password, :role, :created_at, :is_active)
+            INSERT INTO user (username, email, password, role, created_at, updated_at) 
+            VALUES (:username, :email, :password, :role, :created_at, :updated_at)
         ");
         
         $now = new \DateTime();
@@ -79,7 +79,7 @@ class UserModel
             'password' => $hashedPassword,
             'role' => $user->getRole(),
             'created_at' => $dateStr,
-            'is_active' => $user->getIsActive() ? 1 : 0,
+            'updated_at' => $dateStr,
         ]);
     }
 
@@ -90,16 +90,18 @@ class UserModel
             SET username = :username, 
                 email = :email, 
                 role = :role, 
-                is_active = :is_active
+                updated_at = :updated_at
             WHERE id = :id
         ");
+        
+        $now = new \DateTime();
         
         return $query->execute([
             'id' => $user->getId(),
             'username' => $user->getUsername(),
             'email' => $user->getEmail(),
             'role' => $user->getRole(),
-            'is_active' => $user->getIsActive() ? 1 : 0,
+            'updated_at' => $now->format('Y-m-d H:i:s'),
         ]);
     }
 
@@ -144,10 +146,6 @@ class UserModel
         
         if (isset($userData['created_at'])) {
             $user->setCreatedAtFromString($userData['created_at']);
-        }
-        
-        if (isset($userData['is_active'])) {
-            $user->setIsActive((bool)$userData['is_active']);
         }
         
         return $user;

@@ -11,7 +11,7 @@
         <div class="article-header">
             <h1 class="article-title">{{ article.title }}</h1>
             <div class="article-meta">
-                Par {{ article.author }} | 
+                Par {{ article.username ?? article.username ?? 'Anonyme' }} |
                 {% if article.updatedAt %}
                     Dernière modification: {{ article.updatedAt|date("d/m/Y H:i") }}
                 {% else %}
@@ -43,8 +43,8 @@
             {% if comments|length > 0 %}
                 {% for comment in comments %}
                     <div class="comment">
-                        <div class="comment-author">{{ comment.author }}</div>
-                        <div class="comment-date">{{ comment.date|date("d/m/Y H:i") }}</div>
+                        <div class="comment-author">{{  comment.username ?? comment.author ?? 'Anonyme' }}</div>
+                        <div class="comment-date">{{ (comment.created_at ?? comment.date)|date("d/m/Y H:i") }}</div>
                         <div class="comment-content mt-2">{{ comment.content }}</div>
                     </div>
                 {% endfor %}
@@ -72,10 +72,6 @@
                 {% endif %}
                 
                 <form method="post">
-                    <div class="form-group mb-3">
-                        <label for="author">Nom</label>
-                        <input type="text" class="form-control" id="author" name="author" required>
-                    </div>
                     
                     <div class="form-group mb-3">
                         <label for="content">Commentaire</label>

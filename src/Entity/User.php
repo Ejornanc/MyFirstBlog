@@ -90,17 +90,6 @@ class User
         return $this->setCreatedAt($date);
     }
 
-    public function getIsActive(): ?bool
-    {
-        return $this->isActive;
-    }
-
-    public function setIsActive(?bool $isActive): static
-    {
-        $this->isActive = $isActive;
-        return $this;
-    }
-
     public function isAdmin(): bool
     {
         return $this->role === 'admin';

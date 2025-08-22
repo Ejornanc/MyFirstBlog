@@ -88,8 +88,8 @@ class ArticleModel
     public function createArticle(Article $article): bool
     {
         $query = $this->pdo->prepare("
-            INSERT INTO article (title, chapo, content, author, date, updated_at, slug, actif) 
-            VALUES (:title, :chapo, :content, :author, :date, :updated_at, :slug, :actif)
+            INSERT INTO article (title, chapo, content, user_id, date) 
+            VALUES (:title, :chapo, :content, :user_id, :date)
         ");
         
         $now = new \DateTime();
@@ -99,11 +99,8 @@ class ArticleModel
             'title' => $article->getTitle(),
             'chapo' => $article->getChapo(),
             'content' => $article->getContent(),
-            'author' => $article->getAuthor(),
+            'user_id' => null,
             'date' => $dateStr,
-            'updated_at' => $dateStr,
-            'slug' => $article->getSlug(),
-            'actif' => $article->getActif() ? 1 : 0,
         ]);
     }
     
@@ -113,25 +110,15 @@ class ArticleModel
             UPDATE article 
             SET title = :title, 
                 chapo = :chapo, 
-                content = :content, 
-                author = :author, 
-                updated_at = :updated_at,
-                slug = :slug,
-                actif = :actif
+                content = :content
             WHERE id = :id
         ");
-        
-        $now = new \DateTime();
         
         return $query->execute([
             'id' => $article->getId(),
             'title' => $article->getTitle(),
             'chapo' => $article->getChapo(),
             'content' => $article->getContent(),
-            'author' => $article->getAuthor(),
-            'updated_at' => $now->format('Y-m-d H:i:s'),
-            'slug' => $article->getSlug(),
-            'actif' => $article->getActif() ? 1 : 0,
         ]);
     }
     

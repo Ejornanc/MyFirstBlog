@@ -69,8 +69,7 @@ class UserController extends ParentController
                 $user->setUsername($username)
                     ->setEmail($email)
                     ->setPassword($password)
-                    ->setRole('user')
-                    ->setIsActive(true);
+                    ->setRole('user');
                 
                 if ($this->userModel->createUser($user)) {
                     $success = true;
@@ -118,8 +117,6 @@ class UserController extends ParentController
                     $errors[] = 'Invalid email or password';
                 } elseif (!$this->userModel->verifyPassword($user, $password)) {
                     $errors[] = 'Invalid email or password';
-                } elseif (!$user->getIsActive()) {
-                    $errors[] = 'Your account is not active';
                 } else {
                     // Login successful
                     AuthMiddleware::login(

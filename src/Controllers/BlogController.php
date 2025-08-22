@@ -1,15 +1,19 @@
 <?php
 
 namespace App\Controllers;
+use App\Entity\Comment;
 use App\Models\ArticleModel;
+use App\Models\CommentModel;
 
 class BlogController extends ParentController
 {
     private ArticleModel $articleModel;
+    private CommentModel $commentModel;
     
     public function __construct()
     {
         $this->articleModel = new ArticleModel();
+        $this->commentModel = new CommentModel();
     }
     
     public function articles()
@@ -38,35 +42,43 @@ class BlogController extends ParentController
             exit;
         }
         
-        // Handle comment submission
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $author = $_POST['author'] ?? '';
-            $content = $_POST['content'] ?? '';
+        // Handle comment submission (requires logged-in user due to schema user_id NOT NULL)
+        if ($this->isPost()) {
+            /** @var Comment $comment */
+            $comment = $this->hydrateFromForm (Comment::class);
             
-            // Validate inputs
-            if (empty($author)) {
-                $errors[] = 'Name is required';
-            }
-            
-            if (empty($content)) {
+            if (empty($comment->getContent())) {
                 $errors[] = 'Comment is required';
             }
             
-            // If no errors, save the comment (to be implemented with CommentModel)
+            // If no errors, attempt to save comment only if user is logged in
+            $user = \App\Middleware\AuthMiddleware::getUser();
             if (empty($errors)) {
-                // For now, just show success message
-                // In a real implementation, we would save to database
-                $commentSuccess = true;
+                if ($user && isset($user['id'])) {
+                    $comment->setArticleId((int)$id)
+                        ->setUserId((int)$user['id'])
+                        ->setIsApproved(false);
+                    try {
+                        $this->commentModel->addComment($comment);
+                        $commentSuccess = true;
+                    } catch (\Throwable $e) {
+                        $errors[] = 'Une erreur est survenue lors de l\'envoi du commentaire.';
+                    }
+                } else {
+                    $errors[] = 'Vous devez être connecté pour poster un commentaire.';
+                }
             }
         }
+
+        // Fetch approved comments for this article
+        $comments = $this->commentModel->getCommentsByArticleId((int)$id, true);
 
         $this->render('blog/article', [
             'article' => $article,
             'user' => \App\Middleware\AuthMiddleware::getUser(),
             'errors' => $errors,
             'commentSuccess' => $commentSuccess,
-            // In a real implementation, we would fetch comments from database
-            'comments' => [],
+            'comments' => $comments,
         ]);
     }
 }
