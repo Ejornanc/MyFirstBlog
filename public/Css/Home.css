@@ -1,7 +1,7 @@
 .hero-section {
     text-align: center;
     padding: 50px 0;
-    background-color: #f8f9fa;
+    background-color: #F9F9F9; /* secondary background */
     margin-bottom: 30px;
 }
 .profile-image {
@@ -22,7 +22,7 @@
     max-width: 600px;
     margin: 0 auto;
     padding: 20px;
-    background-color: #f8f9fa;
+    background-color: #F9F9F9;
     border-radius: 5px;
 }
 .cv-link {

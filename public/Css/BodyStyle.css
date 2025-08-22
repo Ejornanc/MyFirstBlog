@@ -3,6 +3,23 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
+    background-color: #FFFFFF; /* Main background */
+    color: #1E1E1E; /* Primary text color */
+    /* Prevent footer from overlapping page content */
+    padding-bottom: 70px; /* should be >= footer height */
+}
+
+/* Global link colors */
+a {
+    color: #008080; /* Teal */
+    text-decoration: none;
+}
+a:visited { color: #008080; }
+a:hover, a:active { color: #FF6B00; }
+
+#content {
+    /* Optional: ensure some breathing space below main content */
+    margin-bottom: 20px;
 }
 
 .social-links {

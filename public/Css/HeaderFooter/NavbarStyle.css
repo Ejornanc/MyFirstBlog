@@ -1,33 +1,30 @@
 .navbar a {
-    color: white; /* Couleur par défaut des liens */
-    text-decoration: none; /* Pas de soulignement (optionnel) */
+    color: #008080; /* Teal: default links */
+    text-decoration: none; /* No underline */
 }
 
-/* Lien visité */
+/* Visited links */
 .navbar a:visited {
-    font-weight: bold;
-    color: red; /* Couleur des liens visités */
+    color: #008080; /* keep teal for visited */
 }
 
-/* Lien survolé */
+/* Hover links */
 .navbar a:hover {
-    font-weight: bold;
-    color: yellow; /* Couleur lors du survol */
-    text-decoration: underline; /* Optionnel */
+    color: #FF6B00; /* Orange on hover */
+    text-decoration: underline; /* Optional */
 }
 
-/* Lien actif (au moment du clic) */
+/* Active (on click) */
 .navbar a:active {
-    font-weight: bold;
-    color: #ffffff; /* Couleur quand le lien est cliqué */
+    color: #FF6B00; /* Orange when active */
 }
 
 .navbar {
-    list-style: none; /* Supprime les puces */
-    display: flex; /* Dispose les éléments horizontalement */
-    padding: 0; /* Supprime le padding par défaut */
-    margin: 0; /* Supprime les marges par défaut */
-    justify-content: center; /* Centre le contenu horizontalement */
+    list-style: none; /* Remove bullets */
+    display: flex; /* Horizontal items */
+    padding: 0;
+    margin: 0;
+    justify-content: center;
 }
 
 .navbar-container {
@@ -37,8 +34,8 @@
 }
 
 .navbar li + li::before {
-    content: "|"; /* Ajoute le séparateur */
-    color: white; /* Change la couleur des séparateurs */
-    margin: 0 15px; /* Ajoute de l'espace avant et après le séparateur */
+    content: "|"; /* Separator */
+    color: #E0E0E0; /* Subtle separator color */
+    margin: 0 15px;
 }
 

@@ -17,29 +17,34 @@ class ArticleModel
 
     public function getArticle(int $id): ?Article
     {
-        $query = $this->pdo->prepare("SELECT a.*, u.email FROM article a LEFT JOIN user u ON a.user_id = u.id WHERE a.id = :id");
+        $query = $this->pdo->prepare("SELECT a.* FROM article a WHERE a.id = :id");
         $query->execute([
             "id" => $id,
         ]);
         $query->setFetchMode(PDO::FETCH_ASSOC);
         $articleData = $query->fetch();
-        //dd($articleData);
         if (!$articleData) {
             return null;
         }
         
         $article = new Article();
         $article->setId($articleData['id'])
-            ->setTitle($articleData['title'])
-            ->setChapo($articleData['chapo'])
-            ->setContent($articleData['content'])
-            ->setDateFromString($articleData['date']);
-            
-        // Set new fields if they exist in the database
-
+            ->setTitle($articleData['title'] ?? null)
+            ->setChapo($articleData['chapo'] ?? null)
+            ->setContent($articleData['content'] ?? null)
+            ->setDateFromString($articleData['date'] ?? null);
         
         if (isset($articleData['author'])) {
             $article->setAuthor($articleData['author']);
+        }
+        if (isset($articleData['updated_at'])) {
+            $article->setUpdatedAtFromString($articleData['updated_at']);
+        }
+        if (isset($articleData['slug'])) {
+            $article->setSlug($articleData['slug']);
+        }
+        if (isset($articleData['actif'])) {
+            $article->setActif((bool)$articleData['actif']);
         }
 
         return $article;

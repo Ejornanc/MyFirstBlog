@@ -15,6 +15,17 @@ class UserModel
         $this->pdo = Database::getConnection();
     }
 
+    /**
+     * Récupère tous les utilisateurs.
+     * @return User[]
+     */
+    public function getAllUsers(): array
+    {
+        $stmt = $this->pdo->query('SELECT * FROM user ORDER BY created_at DESC');
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
+        return array_map(fn($row) => $this->createUserFromData($row), $rows);
+    }
+
     public function getUser(int $id): ?User
     {
         $query = $this->pdo->prepare("SELECT * FROM user WHERE id = :id");

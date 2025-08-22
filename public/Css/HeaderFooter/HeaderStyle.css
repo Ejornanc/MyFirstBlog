@@ -3,8 +3,8 @@
     align-items: center;
     justify-content: space-between;
     padding: 10px 20px;
-    background-color: #000000;
-    border-bottom: 1px solid #ddd;
+    background-color: #1E1E1E; /* Header anthracite */
+    border-bottom: 1px solid #E0E0E0; /* subtle separator */
 }
 
 .logo {

@@ -16,6 +16,37 @@ class CommentModel
     }
 
     /**
+     * Récupère un commentaire par son ID.
+     */
+    public function getComment(int $id): ?Comment
+    {
+        $sql = 'SELECT c.*, u.username FROM comments c INNER JOIN user u ON u.id = c.user_id WHERE c.id = :id';
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute(['id' => $id]);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        if (!$row) {
+            return null;
+        }
+        return $this->mapRowToComment($row);
+    }
+
+    /**
+     * Récupère tous les commentaires.
+     * @return Comment[]
+     */
+    public function getAllComments(bool $onlyApproved = false): array
+    {
+        $sql = 'SELECT c.*, u.username FROM comments c INNER JOIN user u ON u.id = c.user_id';
+        if ($onlyApproved) {
+            $sql .= ' WHERE c.is_approved = 1';
+        }
+        $sql .= ' ORDER BY c.created_at DESC';
+        $stmt = $this->pdo->query($sql);
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
+        return array_map(fn($row) => $this->mapRowToComment($row), $rows);
+    }
+
+    /**
      * Récupère les commentaires d'un article.
      * @return Comment[]
      */
@@ -61,6 +92,19 @@ class CommentModel
     }
 
     /**
+     * Met à jour un commentaire.
+     */
+    public function updateComment(Comment $comment): bool
+    {
+        $stmt = $this->pdo->prepare('UPDATE comments SET content = :content, is_approved = :is_approved WHERE id = :id');
+        return $stmt->execute([
+            'id' => $comment->getId(),
+            'content' => $comment->getContent(),
+            'is_approved' => $comment->isApproved() ? 1 : 0,
+        ]);
+    }
+
+    /**
      * Approuve un commentaire par ID.
      */
     public function approveComment(int $id): bool
@@ -79,6 +123,15 @@ class CommentModel
     }
 
     /**
+     * Invalide (rejette) un commentaire par ID (is_approved = 0).
+     */
+    public function rejectComment(int $id): bool
+    {
+        $stmt = $this->pdo->prepare('UPDATE comments SET is_approved = 0 WHERE id = :id');
+        return $stmt->execute(['id' => $id]);
+    }
+
+    /**
      * Compte les commentaires pour un article.
      */
     public function countCommentsByArticleId(int $articleId, bool $onlyApproved = true): int
@@ -87,6 +140,18 @@ class CommentModel
         if ($onlyApproved) {
             $sql .= " AND is_approved = 1";
         }
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute(['article_id' => $articleId]);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        return (int)($row['cnt'] ?? 0);
+    }
+
+    /**
+     * Compte les commentaires en attente (non approuvés) pour un article.
+     */
+    public function countPendingCommentsByArticleId(int $articleId): int
+    {
+        $sql = "SELECT COUNT(*) as cnt FROM comments WHERE article_id = :article_id AND is_approved = 0";
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute(['article_id' => $articleId]);
         $row = $stmt->fetch(PDO::FETCH_ASSOC);

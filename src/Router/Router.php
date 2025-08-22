@@ -57,5 +57,9 @@ class Router
         $router->map('POST', '/admin/article/edit/[i:id]', [$adminController, 'editArticle']);
         $router->map('GET', '/admin/article/delete/[i:id]', [$adminController, 'deleteArticle']);
         $router->map('POST', '/admin/article/delete/[i:id]', [$adminController, 'deleteArticle']);
+        // Comment moderation
+        $router->map('GET', '/admin/article/[i:id]/comments', [$adminController, 'articleComments']);
+        $router->map('POST', '/admin/comment/approve/[i:id]', [$adminController, 'approveComment']);
+        $router->map('POST', '/admin/comment/delete/[i:id]', [$adminController, 'deleteComment']);
     }
 }

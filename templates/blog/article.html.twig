@@ -4,6 +4,7 @@
 {% block head %}
     {{ parent() }}
         <link rel="stylesheet" href="/Css/Blog.css">
+        <link rel="stylesheet" href="/Css/Formulaire.css">
 {% endblock %}
 
 {% block content %}
@@ -52,7 +53,7 @@
                 <p>Aucun commentaire pour le moment.</p>
             {% endif %}
             
-            <div class="comment-form">
+            <div class="comment-form form-container">
                 <h4>Ajouter un commentaire</h4>
                 
                 {% if commentSuccess %}
