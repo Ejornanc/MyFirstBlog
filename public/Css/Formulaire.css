@@ -14,6 +14,12 @@
     margin-bottom: 18px;
 }
 
+/* Center form section headings */
+.form-container h1,
+.form-container h2,
+.form-container h3,
+.form-container h4 { text-align: center; }
+
 /* Libellés */
 .form-group label,
 .form-check-label {
@@ -112,6 +118,22 @@ textarea.form-control {
 .btn-secondary:hover {
     background-color: #e3e8ee;
     border-color: #cfd6dd;
+}
+
+/* Danger button to harmonize public forms with admin palette */
+.btn-danger {
+    background-color: #FF6B00; /* Orange */
+    border-color: #FF6B00;
+    color: #fff;
+}
+.btn-danger:hover {
+    background-color: #e35f00;
+    border-color: #e35f00;
+    box-shadow: 0 4px 12px rgba(227,95,0,0.25);
+}
+.btn-danger:active,
+.btn-danger:visited {
+    color: #fff;
 }
 
 .btn-outline-light {

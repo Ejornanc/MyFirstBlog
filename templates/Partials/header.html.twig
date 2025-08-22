@@ -3,6 +3,13 @@
         <a href="/"><img src="/../Images/LogoPersoTransparent.png" alt="Site Logo"></a>
         <h1>Alexandre Delcroix</h1>
     </div>
+
+    <!-- Mobile menu toggle (no JS) -->
+    <input type="checkbox" id="nav-toggle" class="nav-toggle" aria-label="Ouvrir le menu">
+    <label for="nav-toggle" class="nav-toggle-label" aria-hidden="true">
+        <span></span><span></span><span></span>
+    </label>
+
     <div class="navbar-container">
         {% include 'Partials/navbar.html.twig' with {'user': user|default(null)} %}
     </div>

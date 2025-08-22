@@ -12,3 +12,22 @@ footer p {
     margin: 0;
     font-size: 14px;
 }
+footer {
+    background-color: #1E1E1E; /* Footer anthracite */
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+}
+
+footer p {
+    margin: 0;
+    font-size: 14px;
+}
+
+/* On small screens, allow the footer to flow normally */
+@media (max-width: 600px) {
+    footer { position: static; }
+}
