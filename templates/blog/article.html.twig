@@ -28,7 +28,7 @@
         {% endif %}
         
         <div class="article-content">
-            {{ article.content|raw }}
+            {{ article.content}}
         </div>
         
         {% if user and user.role == 'admin' %}

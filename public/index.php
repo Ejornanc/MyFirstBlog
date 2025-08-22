@@ -5,6 +5,8 @@ require '../vendor/autoload.php';
 use App\Controllers\ErrorController;
 use App\Router\Router;
 
+ini_set("session.cookie_httponly", 1);
+
 // Initialisation du routeur
 $router = new AltoRouter();
 
