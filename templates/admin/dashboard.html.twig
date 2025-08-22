@@ -1,0 +1,128 @@
+{% extends "Layouts/base.html.twig" %}
+
+{% block title %}Administration - Blog Professionnel{% endblock %}
+{% block head %}
+    {{ parent() }}
+        <link rel="stylesheet" href="/Css/Admin.css">
+{% endblock %}
+
+{% block content %}
+    <div class="admin-header">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <h1 class="admin-title">Administration du Blog</h1>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <a href="/" class="btn btn-outline-light">Retour au site</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="container">
+        {% if app.request.query.get('deleted') %}
+            <div class="alert alert-success">
+                L'article a été supprimé avec succès.
+            </div>
+        {% endif %}
+        
+        {% if app.request.query.get('error') %}
+            <div class="alert alert-danger">
+                Une erreur s'est produite lors de la suppression de l'article.
+            </div>
+        {% endif %}
+        
+        <div class="admin-actions">
+            <a href="/admin/article/add" class="btn btn-success">Ajouter un article</a>
+        </div>
+        
+        <h2>Liste des articles</h2>
+        
+        {% if articles|length > 0 %}
+            <div class="table-responsive article-table">
+                <table class="table table-striped table-center">
+                    <thead>
+                        <tr>
+                            <th>Titre</th>
+                            <th>Auteur</th>
+                            <th>Date de création</th>
+                            <th>Commentaires à valider</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for article in articles %}
+                            <tr>
+                                <td>{{ article.title }}</td>
+                                <td>{{ article.username ?? article.username ?? 'Anonyme' }}</td>
+                                <td>{{ article.date|date("d/m/Y H:i") }}</td>
+                                <td>
+                                    <a href="/admin/article/{{ article.id }}/comments" class="text-decoration-none">
+                                        {% set count = pendingCounts[article.id] ?? 0 %}
+                                        {% if count > 0 %}
+                                            <span class="status-badge status-inactive">À valider ({{ count }})</span>
+                                        {% else %}
+                                            <span class="status-badge status-active">Rien à valider</span>
+                                        {% endif %}
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="alert alert-info">
+                Aucun article n'a été créé pour le moment.
+            </div>
+        {% endif %}
+
+        <h2 class="mt-5">Commentaires en attente de validation</h2>
+
+        {% if app.request.query.get('commentApproved') %}
+            <div class="alert alert-success">Le commentaire a été approuvé.</div>
+        {% endif %}
+        {% if app.request.query.get('commentDeleted') %}
+            <div class="alert alert-info">Le commentaire a été supprimé.</div>
+        {% endif %}
+        {% if app.request.query.get('commentError') %}
+            <div class="alert alert-danger">Une erreur est survenue lors de l'opération sur le commentaire.</div>
+        {% endif %}
+
+        {% if pendingComments is defined and pendingComments|length > 0 %}
+            <div class="table-responsive">
+                <table class="table table-striped table-center">
+                    <thead>
+                        <tr>
+                            <th>Article</th>
+                            <th>Auteur</th>
+                            <th>Contenu</th>
+                            <th>Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for comment in pendingComments %}
+                            <tr>
+                                <td>{{ comment.articleId }}</td>
+                                <td>{{ comment.author ?? 'Anonyme' }}</td>
+                                <td>{{ comment.content }}</td>
+                                <td>{{ comment.date|date('d/m/Y H:i') }}</td>
+                                <td>
+                                    <form method="post" action="/admin/comment/approve/{{ comment.id }}" style="display:inline-block; margin-right:6px;">
+                                        <button type="submit" class="btn btn-sm btn-success">Valider</button>
+                                    </form>
+                                    <form method="post" action="/admin/comment/delete/{{ comment.id }}" style="display:inline-block" onsubmit="return confirm('Supprimer ce commentaire ? Cette action est irréversible.');">
+                                        <button type="submit" class="btn btn-sm btn-danger">Supprimer</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="alert alert-info">Aucun commentaire en attente.</div>
+        {% endif %}
+    </div>
+{% endblock %}

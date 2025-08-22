@@ -1,55 +1,84 @@
 <?php
 
 namespace App\Controllers;
+use App\Entity\Comment;
 use App\Models\ArticleModel;
+use App\Models\CommentModel;
 
 class BlogController extends ParentController
 {
-    public function home(){
-        $this->render('home', ["chef" => "<h1>c'est moi</h1>"]);
+    private ArticleModel $articleModel;
+    private CommentModel $commentModel;
+    
+    public function __construct()
+    {
+        $this->articleModel = new ArticleModel();
+        $this->commentModel = new CommentModel();
     }
+    
+    public function articles()
+    {
+        $articles = $this->articleModel->getAllArticles();
 
-    public function suite(){
-        $this->render('suite');
-    }
-    public function demo(){
-        $this->render('demo');
-    }
+        // Add URLs to articles
+        foreach ($articles as $article) {
+            $article->url = "/article/" . $article->getSlug() . "-" . $article->getId();
+        }
 
-    public function contact(){
-        $this->render('contact');
+        $this->render('blog/articles', [
+            "articles" => $articles,
+            "user" => \App\Middleware\AuthMiddleware::getUser(),
+        ]);
     }
 
     public function article($slug, $id)
     {
-        $model = new ArticleModel();
-        $article = $model->getArticle($id); // Récupère l'article par ID
+        $article = $this->articleModel->getArticle($id);
+        $errors = [];
+        $commentSuccess = false;
 
         if (!$article) {
-            // Gérer le cas où l'article n'existe pas
-            echo "Article non trouvé.";
+            header('Location: /error404');
             exit;
         }
-
-        $this->render('article', [
-            'article' => $article, // Passer l'article à la vue
-        ]);
-    }
-
-    public function articles(){
-        $model = new ArticleModel();
-        $articles = $model->getAllArticles();
-
-        // Ajouter les URLs aux articles
-        foreach ($articles as $article) {
-            $article->url = "/article/" . $article->getSlug() . "-" . $article->getId(); // Crée l'URL pour chaque article
+        
+        // Handle comment submission (requires logged-in user due to schema user_id NOT NULL)
+        if ($this->isPost()) {
+            /** @var Comment $comment */
+            $comment = $this->hydrateFromForm (Comment::class);
+            
+            if (empty($comment->getContent())) {
+                $errors[] = 'Comment is required';
+            }
+            
+            // If no errors, attempt to save comment only if user is logged in
+            $user = \App\Middleware\AuthMiddleware::getUser();
+            if (empty($errors)) {
+                if ($user && isset($user['id'])) {
+                    $comment->setArticleId((int)$id)
+                        ->setUserId((int)$user['id'])
+                        ->setIsApproved(false);
+                    try {
+                        $this->commentModel->addComment($comment);
+                        $commentSuccess = true;
+                    } catch (\Throwable $e) {
+                        $errors[] = 'Une erreur est survenue lors de l\'envoi du commentaire.';
+                    }
+                } else {
+                    $errors[] = 'Vous devez être connecté pour poster un commentaire.';
+                }
+            }
         }
 
-        // Passer les articles avec l'URL à la vue
-        $this->render('articles', [
-            "articles" => $articles,
+        // Fetch approved comments for this article
+        $comments = $this->commentModel->getCommentsByArticleId((int)$id, true);
+
+        $this->render('blog/article', [
+            'article' => $article,
+            'user' => \App\Middleware\AuthMiddleware::getUser(),
+            'errors' => $errors,
+            'commentSuccess' => $commentSuccess,
+            'comments' => $comments,
         ]);
     }
-
-
 }

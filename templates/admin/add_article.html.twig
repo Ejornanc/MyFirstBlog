@@ -1,0 +1,80 @@
+{% extends "Layouts/base.html.twig" %}
+
+{% block title %}Ajouter un article - Administration{% endblock %}
+{% block head %}
+    {{ parent() }}
+        <link rel="stylesheet" href="/Css/Admin.css">
+        <link rel="stylesheet" href="/Css/Formulaire.css">
+{% endblock %}
+
+{% block content %}
+    <div class="admin-header">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <h1 class="admin-title">Ajouter un article</h1>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <a href="/admin/dashboard" class="btn btn-outline-light">Retour au tableau de bord</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="form-container">
+            {% if success %}
+                <div class="alert alert-success">
+                    L'article a été créé avec succès.
+                </div>
+            {% endif %}
+            
+            {% if errors|length > 0 %}
+                <div class="alert alert-danger">
+                    <ul>
+                        {% for error in errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+            
+            <form method="post">
+                <div class="form-group mb-3">
+                    <label for="title">Titre</label>
+                    <input type="text" class="form-control" id="title" name="title" required>
+                </div>
+                
+                <div class="form-group mb-3">
+                    <label for="chapo">Chapô</label>
+                    <textarea class="form-control" id="chapo" name="chapo" rows="3" required></textarea>
+                    <small class="form-text text-muted">Un court résumé de l'article qui apparaîtra dans la liste des articles.</small>
+                </div>
+                
+                <div class="form-group mb-3">
+                    <label for="content">Contenu</label>
+                    <textarea class="form-control" id="content" name="content" rows="10" required></textarea>
+                </div>
+                
+                <div class="form-group mb-3">
+                    <label for="author">Auteur</label>
+                    <input type="text" class="form-control" id="author" name="author" required>
+                </div>
+                
+                <div class="form-group mb-4">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="actif" name="actif" checked>
+                        <label class="form-check-label" for="actif">
+                            Publier immédiatement
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="d-flex justify-content-between">
+                    <a href="/admin/dashboard" class="btn btn-secondary">Annuler</a>
+                    <button type="submit" class="btn btn-primary">Créer l'article</button>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

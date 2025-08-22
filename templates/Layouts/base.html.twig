@@ -10,12 +10,11 @@
         <link rel="stylesheet" href="/Css/HeaderFooter/FooterStyle.css">
 
         <title>{% block title %}{% endblock %} - My Webpage</title>
-<body>
-    <!-- Inclure l'en-tête -->
-    {% include 'Partials/header.html.twig' %}
     {% endblock %}
 </head>
 <body>
+    <!-- Inclure l'en-tête -->
+    {% include 'Partials/header.html.twig' with {'user': user|default(null)} %}
 <div id="content">{% block content %}{% endblock %}</div>
 <div id="footer">
     {% block footer %}

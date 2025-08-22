@@ -1,0 +1,159 @@
+.admin-header {
+    background-color: #1E1E1E; /* Anthracite */
+    color: white;
+    padding: 20px 0;
+    margin-bottom: 30px;
+}
+.admin-title {
+    margin: 0;
+}
+.form-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.admin-actions {
+    margin-bottom: 20px;
+}
+.article-table {
+    margin-top: 20px;
+}
+.article-actions {
+    white-space: nowrap;
+}
+.status-badge {
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+}
+.status-active {
+    background-color: #28a745;
+    color: white;
+}
+.status-inactive {
+    background-color: #dc3545;
+    color: white;
+}
+
+/* Improve table readability and spacing in admin area */
+.table-responsive {
+    margin-top: 15px;
+    margin-bottom: 25px;
+}
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+.table th,
+.table td {
+    padding: 12px 16px; /* increased spacing */
+    vertical-align: middle;
+    border-bottom: 1px solid #E0E0E0; /* subtle borders */
+}
+.table thead th {
+    background-color: #F9F9F9; /* secondary background */
+    font-weight: 600;
+}
+.table-striped tbody tr:nth-child(odd) {
+    background-color: #F9F9F9; /* alternate row */
+}
+
+/* Centering helper for dashboard tables */
+.table-center th,
+.table-center td {
+    text-align: center;
+}
+
+/* Button styles for admin actions */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: background-color .2s ease, color .2s ease, box-shadow .2s ease, border-color .2s ease;
+    text-decoration: none;
+}
+.btn-sm {
+    padding: 6px 10px;
+    font-size: 0.85rem;
+    border-radius: 6px;
+}
+.btn-success {
+    background-color: #008080; /* Teal */
+    border-color: #008080;
+    color: #fff;
+}
+.btn-success:hover {
+    background-color: #006d6d;
+    border-color: #006d6d;
+    box-shadow: 0 4px 12px rgba(0,128,128,0.25);
+}
+.btn-success:active,
+.btn-success:visited {
+    color: #fff;
+}
+.btn-danger {
+    background-color: #FF6B00; /* Orange */
+    border-color: #FF6B00;
+    color: #fff;
+}
+.btn-danger:hover {
+    background-color: #e35f00;
+    border-color: #e35f00;
+    box-shadow: 0 4px 12px rgba(227,95,0,0.25);
+}
+.btn-danger:active,
+.btn-danger:visited {
+    color: #fff;
+}
+.btn-info {
+    background-color: #eef2f6;
+    border-color: #d9dde3;
+    color: #1E1E1E;
+}
+.btn-info:hover {
+    background-color: #e3e8ee;
+    border-color: #cfd6dd;
+}
+.btn-outline-light {
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.6);
+    color: #ffffff;
+}
+.btn-outline-light:hover {
+    background: rgba(255,255,255,0.1);
+}
+.btn-outline-light:active,
+.btn-outline-light:visited {
+    color: #ffffff;
+}
+
+.delete-container {
+    max-width: 600px;
+    margin: 0 auto;
+    text-align: center;
+}
+.article-info {
+    margin: 30px 0;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 5px;
+    text-align: left;
+}
+.delete-warning {
+    color: #dc3545;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+.action-buttons {
+    margin-top: 30px;
+}
+.form-container {
+    max-width: 800px;
+    margin: 0 auto;
+}

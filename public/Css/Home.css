@@ -1,0 +1,30 @@
+.hero-section {
+    text-align: center;
+    padding: 50px 0;
+    background-color: #F9F9F9; /* secondary background */
+    margin-bottom: 30px;
+}
+.profile-image {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 20px;
+    background-color: #000000;
+}
+.tagline {
+    font-size: 1.5rem;
+    font-style: italic;
+    margin-bottom: 30px;
+}
+
+.contact-form {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #F9F9F9;
+    border-radius: 5px;
+}
+.cv-link {
+    margin: 20px 0;
+}
