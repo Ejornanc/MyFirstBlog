@@ -1,0 +1,73 @@
+{% extends "Layouts/base.html.twig" %}
+
+{% block title %}Commentaires à valider - {{ article.title }}{% endblock %}
+{% block head %}
+    {{ parent() }}
+    <link rel="stylesheet" href="/Css/Admin.css">
+{% endblock %}
+
+{% block content %}
+<div class="admin-header">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <h1 class="admin-title">Commentaires à valider</h1>
+                <p class="mb-0">Article: <strong>{{ article.title }}</strong></p>
+            </div>
+            <div class="col-md-6 text-md-end">
+                <a href="/admin/dashboard" class="btn btn-outline-light">Retour au tableau de bord</a>
+                <a href="/article/{{ article.slug }}-{{ article.id }}" class="btn btn-outline-light" target="_blank">Voir l'article</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    {% if app.request.query.get('commentApproved') %}
+        <div class="alert alert-success">Le commentaire a été approuvé.</div>
+    {% endif %}
+    {% if app.request.query.get('commentDeleted') %}
+        <div class="alert alert-info">Le commentaire a été supprimé.</div>
+    {% endif %}
+    {% if app.request.query.get('commentError') %}
+        <div class="alert alert-danger">Une erreur est survenue lors de l'opération sur le commentaire.</div>
+    {% endif %}
+
+    {% set total = pendingComments|length %}
+    <h2>Commentaires en attente ({{ total }})</h2>
+
+    {% if total > 0 %}
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Auteur</th>
+                        <th>Contenu</th>
+                        <th>Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for comment in pendingComments %}
+                        <tr>
+                            <td>{{ comment.author ?? 'Anonyme' }}</td>
+                            <td>{{ comment.content }}</td>
+                            <td>{{ comment.date|date('d/m/Y H:i') }}</td>
+                            <td>
+                                <form method="post" action="/admin/comment/approve/{{ comment.id }}?redirect=/admin/article/{{ article.id }}/comments" style="display:inline-block; margin-right:6px;">
+                                    <button type="submit" class="btn btn-sm btn-success">Valider</button>
+                                </form>
+                                <form method="post" action="/admin/comment/delete/{{ comment.id }}?redirect=/admin/article/{{ article.id }}/comments" style="display:inline-block" onsubmit="return confirm('Supprimer ce commentaire ? Cette action est irréversible.');">
+                                    <button type="submit" class="btn btn-sm btn-danger">Supprimer</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="alert alert-info">Aucun commentaire en attente pour cet article.</div>
+    {% endif %}
+</div>
+{% endblock %}

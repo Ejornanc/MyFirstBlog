@@ -1,0 +1,153 @@
+/* Styles spécifiques pour les formulaires d'ajout / modification d'article */
+
+/* Container en carte pour un rendu propre et moderne */
+.form-container {
+    background: #ffffff;
+    padding: 28px;
+    margin: 30px auto;
+    border-radius: 10px;
+    box-shadow: 0 10px 24px rgba(0,0,0,0.08);
+}
+
+/* Groupes et espacement */
+.form-group {
+    margin-bottom: 18px;
+}
+
+/* Libellés */
+.form-group label,
+.form-check-label {
+    display: inline-block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #343a40;
+}
+
+/* Aides de formulaire */
+.form-text.text-muted {
+    display: block;
+    margin-top: 6px;
+    color: #6c757d;
+    font-size: 0.9rem;
+}
+
+/* Champs de saisie */
+.form-control {
+    width: 100%;
+    appearance: none;
+    -webkit-appearance: none;
+    border: 1px solid #d9dde3;
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 1rem;
+    color: #2b2f33;
+    background-color: #fff;
+    transition: border-color .2s ease, box-shadow .2s ease, background-color .2s ease;
+}
+
+.form-control::placeholder {
+    color: #a0a6ad;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: #008080; /* Teal focus */
+    box-shadow: 0 0 0 4px rgba(0,128,128,0.15);
+}
+
+textarea.form-control {
+    min-height: 140px;
+    line-height: 1.5;
+    resize: vertical;
+}
+
+/* Checkbox et alignement */
+.form-check {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.form-check-input {
+    width: 18px;
+    height: 18px;
+    accent-color: #008080; /* Teal */
+}
+
+/* Boutons */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 16px;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: background-color .2s ease, color .2s ease, box-shadow .2s ease, border-color .2s ease;
+    text-decoration: none;
+}
+
+.btn-primary {
+    background-color: #008080; /* Teal */
+    border-color: #008080;
+    color: #fff;
+}
+.btn-primary:hover {
+    background-color: #FF6B00; /* Orange on hover */
+    border-color: #FF6B00;
+    box-shadow: 0 6px 16px rgba(255,107,0,0.25);
+}
+.btn-primary:active,
+.btn-primary:visited {
+    color: #fff;
+}
+
+.btn-secondary {
+    background-color: #eef2f6;
+    border-color: #d9dde3;
+    color: #2b2f33;
+}
+.btn-secondary:hover {
+    background-color: #e3e8ee;
+    border-color: #cfd6dd;
+}
+
+.btn-outline-light {
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.6);
+    color: #ffffff;
+}
+.btn-outline-light:hover {
+    background: rgba(255,255,255,0.1);
+}
+
+/* Layout utilitaires "façon bootstrap" pour ces pages (si pas de bootstrap chargé) */
+.container {
+    max-width: 1000px;
+    padding: 0 16px;
+    margin: 0 auto;
+}
+
+.d-flex {
+    display: flex;
+}
+.justify-content-between {
+    justify-content: space-between;
+}
+
+/* Réactivité */
+@media (max-width: 576px) {
+    .form-container {
+        padding: 18px;
+        margin: 20px auto;
+    }
+    .btn {
+        width: 100%;
+    }
+    .d-flex.justify-content-between {
+        gap: 10px;
+        flex-direction: column-reverse;
+    }
+}
