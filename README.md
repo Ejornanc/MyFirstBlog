@@ -50,9 +50,9 @@ docker compose -f docker-compose.yaml -p MyFirstBlog up -d
 ## Utilisateur Enregistré
 
 ### Admin
-email : admin@admin.fr
-mot de passe : admin123
+- email : admin@admin.fr
+- password : admin123
 
 ### User
-email : user@user.fr
-mot de passe : user123
+- email : user@user.fr
+- password : user123
