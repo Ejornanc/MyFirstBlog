@@ -64,8 +64,33 @@
     .hero-section { padding: 36px 0; }
     .tagline { font-size: 1.25rem; }
 }
+/* Personal description styling */
+.description {
+    max-width: 820px;
+    margin: 24px auto 0;
+    padding: 20px 24px;
+    background-color: #FFFFFF;
+    color: #333333;
+    border-radius: 10px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+    line-height: 1.7;
+    font-size: 1.05rem;
+    text-align: left;
+}
+
+/* Improve readability of long text by spacing paragraphs and honoring line breaks */
+.description br { content: ""; }
+.description + #contact { margin-top: 28px; }
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+    .hero-section { padding: 36px 0; }
+    .tagline { font-size: 1.25rem; }
+    .description { padding: 16px 18px; font-size: 1rem; }
+}
 @media (max-width: 480px) {
     .hero-section { padding: 26px 0; }
     .profile-image { width: 120px; height: 120px; }
     .tagline { font-size: 1.1rem; }
+    .description { padding: 14px 16px; font-size: 0.98rem; border-radius: 8px; }
 }

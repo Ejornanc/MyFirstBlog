@@ -15,7 +15,8 @@ class HomeController extends ParentController
             'name' => 'Alexandre Delcroix',
             'firstName' => 'Alexandre',
             'lastName' => 'Delcroix',
-            'tagline' => 'Alexandre Delcroix, le développeur qu\'il vous faut !',
+            'tagline' => 'Alexandre Delcroix, Symfony inside, bugs outside.',
+            'description'  => 'Développeur PHP/Symfony en fin d’année, je transforme des besoins métiers en solutions web claires et maintenables. J’aime structurer des APIs robustes, modéliser les données (MySQL), et livrer vite sans sacrifier la qualité (tests, revues, outillage). J’utilise au quotidien Symfony, Twig, Docker, Bash, et Python pour automatiser et fiabiliser les workflows. Curieux, rigoureux et orienté produit, je cherche à rejoindre une équipe où je pourrai continuer à apprendre et à contribuer concrètement.',
             'cvLink' => '/assets/cv.pdf',
             'socialLinks' => [
                 'github' => 'https://github.com/Ejornanc',

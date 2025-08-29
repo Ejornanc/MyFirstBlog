@@ -55,7 +55,6 @@ class AdminController extends ParentController
             $title = $_POST['title'] ?? '';
             $chapo = $_POST['chapo'] ?? '';
             $content = $_POST['content'] ?? '';
-            $author = $_POST['author'] ?? '';
             
             // Validate inputs
             if (empty($title)) {
@@ -70,23 +69,24 @@ class AdminController extends ParentController
                 $errors[] = 'Content is required';
             }
             
-            if (empty($author)) {
-                $errors[] = 'Author is required';
-            }
-            
             // If no errors, create the article
             if (empty($errors)) {
                 $article = new Article();
                 $article->setTitle($title)
                     ->setChapo($chapo)
                     ->setContent($content)
-                    ->setAuthor($author)
                     ->setActif(true);
                 
-                if ($this->articleModel->createArticle($article)) {
-                    $success = true;
+                $currentUser = AuthMiddleware::getUser();
+                $userId = (int)($currentUser['id'] ?? 0);
+                if ($userId <= 0) {
+                    $errors[] = 'Utilisateur non authentifié';
                 } else {
-                    $errors[] = 'Failed to create article';
+                    if ($this->articleModel->createArticle($article, $userId)) {
+                        $success = true;
+                    } else {
+                        $errors[] = 'Failed to create article';
+                    }
                 }
             }
         }
@@ -117,7 +117,6 @@ class AdminController extends ParentController
             $title = $_POST['title'] ?? '';
             $chapo = $_POST['chapo'] ?? '';
             $content = $_POST['content'] ?? '';
-            $author = $_POST['author'] ?? '';
             
             // Validate inputs
             if (empty($title)) {
@@ -132,19 +131,17 @@ class AdminController extends ParentController
                 $errors[] = 'Content is required';
             }
             
-            if (empty($author)) {
-                $errors[] = 'Author is required';
-            }
-            
             // If no errors, update the article
             if (empty($errors)) {
                 $article->setTitle($title)
                     ->setChapo($chapo)
-                    ->setContent($content)
-                    ->setAuthor($author);
+                    ->setContent($content);
                 
                 if ($this->articleModel->updateArticle($article)) {
-                    $success = true;
+                    $slug = $article->getSlug();
+                    $id = $article->getId();
+                    header('Location: /article/' . $slug . '-' . $id);
+                    exit;
                 } else {
                     $errors[] = 'Failed to update article';
                 }
