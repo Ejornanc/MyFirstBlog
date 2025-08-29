@@ -11,29 +11,29 @@ class AdminController extends ParentController
 {
     private ArticleModel $articleModel;
     private CommentModel $commentModel;
-    
+
     public function __construct()
     {
         $this->articleModel = new ArticleModel();
         $this->commentModel = new CommentModel();
     }
-    
+
     public function dashboard()
     {
         // Require admin access
         AuthMiddleware::requireAdmin();
-        
+
         $articles = $this->articleModel->getAllArticles();
         // Fetch unapproved comments for moderation (global list, still shown below)
         $allComments = $this->commentModel->getAllComments(false);
-        $pendingComments = array_filter($allComments, fn($c) => !$c->isApproved());
+        $pendingComments = array_filter($allComments, fn ($c) => !$c->isApproved());
 
         // Build per-article pending counts
         $pendingCounts = [];
         foreach ($articles as $a) {
             $pendingCounts[$a->getId()] = $this->commentModel->countPendingCommentsByArticleId((int)$a->getId());
         }
-        
+
         $this->render('admin/dashboard', [
             'user' => AuthMiddleware::getUser(),
             'articles' => $articles,
@@ -41,15 +41,15 @@ class AdminController extends ParentController
             'pendingCounts' => $pendingCounts,
         ]);
     }
-    
+
     public function addArticle()
     {
         // Require admin access
         AuthMiddleware::requireAdmin();
-        
+
         $errors = [];
         $success = false;
-        
+
         // Process form submission
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // CSRF check
@@ -61,20 +61,20 @@ class AdminController extends ParentController
             $title = $_POST['title'] ?? '';
             $chapo = $_POST['chapo'] ?? '';
             $content = $_POST['content'] ?? '';
-            
+
             // Validate inputs
             if (empty($title)) {
                 $errors[] = 'Title is required';
             }
-            
+
             if (empty($chapo)) {
                 $errors[] = 'Chapo is required';
             }
-            
+
             if (empty($content)) {
                 $errors[] = 'Content is required';
             }
-            
+
             // If no errors, create the article
             if (empty($errors)) {
                 $article = new Article();
@@ -82,7 +82,7 @@ class AdminController extends ParentController
                     ->setChapo($chapo)
                     ->setContent($content)
                     ->setActif(true);
-                
+
                 $currentUser = AuthMiddleware::getUser();
                 $userId = (int)($currentUser['id'] ?? 0);
                 if ($userId <= 0) {
@@ -96,28 +96,28 @@ class AdminController extends ParentController
                 }
             }
         }
-        
+
         $this->render('admin/add_article', [
             'user' => AuthMiddleware::getUser(),
             'errors' => $errors,
             'success' => $success,
         ]);
     }
-    
+
     public function editArticle($id)
     {
         // Require admin access
         AuthMiddleware::requireAdmin();
-        
+
         $article = $this->articleModel->getArticle($id);
         $errors = [];
         $success = false;
-        
+
         if (!$article) {
             header('Location: /admin/dashboard');
             exit;
         }
-        
+
         // Process form submission
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // CSRF check
@@ -129,26 +129,26 @@ class AdminController extends ParentController
             $title = $_POST['title'] ?? '';
             $chapo = $_POST['chapo'] ?? '';
             $content = $_POST['content'] ?? '';
-            
+
             // Validate inputs
             if (empty($title)) {
                 $errors[] = 'Title is required';
             }
-            
+
             if (empty($chapo)) {
                 $errors[] = 'Chapo is required';
             }
-            
+
             if (empty($content)) {
                 $errors[] = 'Content is required';
             }
-            
+
             // If no errors, update the article
             if (empty($errors)) {
                 $article->setTitle($title)
                     ->setChapo($chapo)
                     ->setContent($content);
-                
+
                 if ($this->articleModel->updateArticle($article)) {
                     $slug = $article->getSlug();
                     $id = $article->getId();
@@ -159,7 +159,7 @@ class AdminController extends ParentController
                 }
             }
         }
-        
+
         $this->render('admin/edit_article', [
             'user' => AuthMiddleware::getUser(),
             'article' => $article,
@@ -167,19 +167,19 @@ class AdminController extends ParentController
             'success' => $success,
         ]);
     }
-    
+
     public function deleteArticle($id)
     {
         // Require admin access
         AuthMiddleware::requireAdmin();
-        
+
         $article = $this->articleModel->getArticle($id);
-        
+
         if (!$article) {
             header('Location: /admin/dashboard');
             exit;
         }
-        
+
         // Process deletion
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // CSRF check
@@ -196,7 +196,7 @@ class AdminController extends ParentController
                 exit;
             }
         }
-        
+
         $this->render('admin/delete_article', [
             'user' => AuthMiddleware::getUser(),
             'article' => $article,
@@ -207,7 +207,7 @@ class AdminController extends ParentController
     {
         // Require admin access
         AuthMiddleware::requireAdmin();
-        
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // CSRF check
             $token = $_POST['csrf_token'] ?? null;
@@ -245,7 +245,7 @@ class AdminController extends ParentController
         }
         // Get pending comments only for this article
         $allForArticle = $this->commentModel->getCommentsByArticleId((int)$id, false);
-        $pendingForArticle = array_filter($allForArticle, fn($c) => !$c->isApproved());
+        $pendingForArticle = array_filter($allForArticle, fn ($c) => !$c->isApproved());
 
         $this->render('admin/article_comments', [
             'user' => AuthMiddleware::getUser(),

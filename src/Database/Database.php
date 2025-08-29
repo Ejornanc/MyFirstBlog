@@ -4,6 +4,7 @@ namespace App\Database;
 
 use PDO;
 use PDOException;
+
 class Database
 {
     private static ?PDO $pdo = null;
@@ -22,9 +23,8 @@ class Database
                         PDO::ATTR_EMULATE_PREPARES => false // Désactive l’émulation des requêtes préparées pour éviter certaines attaques
                     ]
                 );
-            }
-            catch (PDOException $e) {
-                die("Erreur de connexion : " . $e->getMessage());
+            } catch (PDOException $e) {
+                die('Erreur de connexion : ' . $e->getMessage());
             }
         }
         return self::$pdo;
