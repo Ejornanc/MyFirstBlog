@@ -20,6 +20,9 @@ SET time_zone = "+00:00";
 --
 -- Base de données : `blog`
 --
+CREATE DATABASE IF NOT EXISTS blog CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+USE blog;
+
 
 -- --------------------------------------------------------
 

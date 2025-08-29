@@ -15,7 +15,7 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      - ./MyFirstBlog/MYSQL-MyFirstBlog/DATA:/var/lib/mysql
+      - ../MYSQL-MyFirstBlog/DATA:/var/lib/mysql
     environment:
       MYSQL_ROOT_PASSWORD: 123user
   phpmyadmin:
