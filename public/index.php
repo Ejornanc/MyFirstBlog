@@ -5,6 +5,25 @@ require '../vendor/autoload.php';
 use App\Controllers\ErrorController;
 use App\Router\Router;
 
+// Session cookie hardening (must be set before session_start in Router)
+ini_set('session.cookie_httponly', '1');
+$secure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || (($_SERVER['SERVER_PORT'] ?? 80) == 443);
+session_set_cookie_params([
+    'lifetime' => 0,
+    'path' => '/',
+    'domain' => '',
+    'secure' => $secure ? true : false,
+    'httponly' => true,
+    'samesite' => 'Lax',
+]);
+
+// Security headers
+header('X-Frame-Options: DENY');
+header('X-Content-Type-Options: nosniff');
+header('Referrer-Policy: strict-origin-when-cross-origin');
+// Conservative CSP; allow inline styles due to some inline style attributes in templates
+header("Content-Security-Policy: default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self';");
+
 // Initialisation du routeur
 $router = new AltoRouter();
 

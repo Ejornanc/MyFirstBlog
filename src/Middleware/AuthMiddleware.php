@@ -91,6 +91,10 @@ class AuthMiddleware
      */
     public static function login(int $userId, string $username, string $email, string $role): void
     {
+        // Prevent session fixation
+        if (session_status() === PHP_SESSION_ACTIVE) {
+            session_regenerate_id(true);
+        }
         $_SESSION['user_id'] = $userId;
         $_SESSION['user_username'] = $username;
         $_SESSION['user_email'] = $email;

@@ -27,10 +27,7 @@
 
         </div>
 
-        {# Texte de remplissage pour simuler une longue page #}
-        {% for i in 1..30 %}
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nisl nec tincidunt luctus, nunc elit lacinia augue, vel mattis ligula lorem a risus. (Paragraphe {{ i }})</p>
-        {% endfor %}
+            <p class="description">{{ personalInfo.description|nl2br }}</p>
 
         <section id="contact">
             {% include "contact.html.twig" with { 'is_include': true } %}

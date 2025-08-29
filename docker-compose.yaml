@@ -1,0 +1,27 @@
+services:
+  apache_php:
+    container_name: MyFirstBlogPHP-PhpApache
+    image: webhippie/php-apache
+    ports:
+      - "8080:8080"
+      - "443:443"
+    environment:
+      APACHE_WEBROOT: /srv/www/public
+    volumes:
+      - ./:/srv/www
+  mysql:
+    container_name: MyFirstBlogPHP-Mysql
+    image: mysql
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./MYSQL/DATA:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: 123user
+  phpmyadmin:
+    container_name: MyFirstBlogPHP-PhpMyadmin
+    image: phpmyadmin
+    ports:
+      - "8088:80"
+    environment:
+      - PMA_HOSTS=mysql

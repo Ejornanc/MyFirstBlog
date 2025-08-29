@@ -17,7 +17,7 @@ class ArticleModel
 
     public function getArticle(int $id): ?Article
     {
-        $query = $this->pdo->prepare("SELECT a.* FROM article a WHERE a.id = :id");
+        $query = $this->pdo->prepare("SELECT a.*, u.username FROM article a LEFT JOIN user u ON u.id = a.user_id WHERE a.id = :id");
         $query->execute([
             "id" => $id,
         ]);
@@ -34,8 +34,11 @@ class ArticleModel
             ->setContent($articleData['content'] ?? null)
             ->setDateFromString($articleData['date'] ?? null);
         
-        if (isset($articleData['author'])) {
-            $article->setAuthor($articleData['author']);
+        // Map author from joined user username
+        if (isset($articleData['username'])) {
+            $article->setAuthor($articleData['username']);
+            // also expose as dynamic property for Twig templates that use article.username
+            $article->username = $articleData['username'];
         }
         if (isset($articleData['updated_at'])) {
             $article->setUpdatedAtFromString($articleData['updated_at']);
@@ -51,7 +54,7 @@ class ArticleModel
     }
 
     public function getAllArticles(){
-        $query = $this->pdo->prepare("SELECT * FROM article ORDER BY date DESC");
+        $query = $this->pdo->prepare("SELECT a.*, u.username FROM article a LEFT JOIN user u ON u.id = a.user_id ORDER BY a.date DESC");
         $query->execute();
         $query->setFetchMode(PDO::FETCH_ASSOC);
         $articlesDb = $query->fetchAll();  // Utilisation de fetchAll() pour récupérer tous les articles
@@ -68,8 +71,10 @@ class ArticleModel
                 $article->setChapo($articleDb['chapo']);
             }
             
-            if (isset($articleDb['author'])) {
-                $article->setAuthor($articleDb['author']);
+            // Map author from joined user username
+            if (isset($articleDb['username'])) {
+                $article->setAuthor($articleDb['username']);
+                $article->username = $articleDb['username'];
             }
             
             if (isset($articleDb['updated_at'])) {
@@ -90,7 +95,7 @@ class ArticleModel
         return $articles;
     }
     
-    public function createArticle(Article $article): bool
+    public function createArticle(Article $article, int $userId): bool
     {
         $query = $this->pdo->prepare("
             INSERT INTO article (title, chapo, content, user_id, date) 
@@ -104,7 +109,7 @@ class ArticleModel
             'title' => $article->getTitle(),
             'chapo' => $article->getChapo(),
             'content' => $article->getContent(),
-            'user_id' => null,
+            'user_id' => $userId,
             'date' => $dateStr,
         ]);
     }

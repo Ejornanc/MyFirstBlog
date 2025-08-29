@@ -52,10 +52,15 @@ class AdminController extends ParentController
         
         // Process form submission
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // CSRF check
+            $token = $_POST['csrf_token'] ?? null;
+            if (!\App\Security\Csrf::validate($token)) {
+                $errors[] = 'Invalid CSRF token';
+            }
+
             $title = $_POST['title'] ?? '';
             $chapo = $_POST['chapo'] ?? '';
             $content = $_POST['content'] ?? '';
-            $author = $_POST['author'] ?? '';
             
             // Validate inputs
             if (empty($title)) {
@@ -70,23 +75,24 @@ class AdminController extends ParentController
                 $errors[] = 'Content is required';
             }
             
-            if (empty($author)) {
-                $errors[] = 'Author is required';
-            }
-            
             // If no errors, create the article
             if (empty($errors)) {
                 $article = new Article();
                 $article->setTitle($title)
                     ->setChapo($chapo)
                     ->setContent($content)
-                    ->setAuthor($author)
                     ->setActif(true);
                 
-                if ($this->articleModel->createArticle($article)) {
-                    $success = true;
+                $currentUser = AuthMiddleware::getUser();
+                $userId = (int)($currentUser['id'] ?? 0);
+                if ($userId <= 0) {
+                    $errors[] = 'Utilisateur non authentifié';
                 } else {
-                    $errors[] = 'Failed to create article';
+                    if ($this->articleModel->createArticle($article, $userId)) {
+                        $success = true;
+                    } else {
+                        $errors[] = 'Failed to create article';
+                    }
                 }
             }
         }
@@ -114,10 +120,15 @@ class AdminController extends ParentController
         
         // Process form submission
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // CSRF check
+            $token = $_POST['csrf_token'] ?? null;
+            if (!\App\Security\Csrf::validate($token)) {
+                $errors[] = 'Invalid CSRF token';
+            }
+
             $title = $_POST['title'] ?? '';
             $chapo = $_POST['chapo'] ?? '';
             $content = $_POST['content'] ?? '';
-            $author = $_POST['author'] ?? '';
             
             // Validate inputs
             if (empty($title)) {
@@ -132,19 +143,17 @@ class AdminController extends ParentController
                 $errors[] = 'Content is required';
             }
             
-            if (empty($author)) {
-                $errors[] = 'Author is required';
-            }
-            
             // If no errors, update the article
             if (empty($errors)) {
                 $article->setTitle($title)
                     ->setChapo($chapo)
-                    ->setContent($content)
-                    ->setAuthor($author);
+                    ->setContent($content);
                 
                 if ($this->articleModel->updateArticle($article)) {
-                    $success = true;
+                    $slug = $article->getSlug();
+                    $id = $article->getId();
+                    header('Location: /article/' . $slug . '-' . $id);
+                    exit;
                 } else {
                     $errors[] = 'Failed to update article';
                 }
@@ -173,6 +182,12 @@ class AdminController extends ParentController
         
         // Process deletion
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // CSRF check
+            $token = $_POST['csrf_token'] ?? null;
+            if (!\App\Security\Csrf::validate($token)) {
+                header('Location: /admin/dashboard?error=1');
+                exit;
+            }
             if ($this->articleModel->deleteArticle($id)) {
                 header('Location: /admin/dashboard?deleted=1');
                 exit;
@@ -194,7 +209,13 @@ class AdminController extends ParentController
         AuthMiddleware::requireAdmin();
         
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $success = $this->commentModel->approveComment((int)$id);
+            // CSRF check
+            $token = $_POST['csrf_token'] ?? null;
+            if (!\App\Security\Csrf::validate($token)) {
+                $success = false;
+            } else {
+                $success = $this->commentModel->approveComment((int)$id);
+            }
             // Optional redirect back to a specific page
             $redirect = $_GET['redirect'] ?? null;
             if ($redirect) {
@@ -238,7 +259,13 @@ class AdminController extends ParentController
         // Require admin access
         AuthMiddleware::requireAdmin();
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $success = $this->commentModel->rejectComment((int)$id);
+            // CSRF check
+            $token = $_POST['csrf_token'] ?? null;
+            if (!\App\Security\Csrf::validate($token)) {
+                $success = false;
+            } else {
+                $success = $this->commentModel->rejectComment((int)$id);
+            }
             $redirect = $_GET['redirect'] ?? null;
             if ($redirect) {
                 $sep = (str_contains($redirect, '?')) ? '&' : '?';
@@ -258,7 +285,13 @@ class AdminController extends ParentController
         // Require admin access
         AuthMiddleware::requireAdmin();
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $success = $this->commentModel->deleteComment((int)$id);
+            // CSRF check
+            $token = $_POST['csrf_token'] ?? null;
+            if (!\App\Security\Csrf::validate($token)) {
+                $success = false;
+            } else {
+                $success = $this->commentModel->deleteComment((int)$id);
+            }
             $redirect = $_GET['redirect'] ?? null;
             if ($redirect) {
                 $sep = (str_contains($redirect, '?')) ? '&' : '?';

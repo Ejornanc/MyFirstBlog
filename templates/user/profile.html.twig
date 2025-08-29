@@ -32,6 +32,7 @@
                 <h3 class="profile-info-title">Informations personnelles</h3>
                 
                 <form method="post">
+                    {{ csrf_field() }}
                     <div class="form-group">
                         <label for="username">Nom d'utilisateur</label>
                         <input type="text" class="form-control" id="username" name="username" value="{{ user.username }}" required>
@@ -40,11 +41,6 @@
                     <div class="form-group">
                         <label for="email">Email</label>
                         <input type="email" class="form-control" id="email" name="email" value="{{ user.email }}" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>Rôle</label>
-                        <input type="text" class="form-control" value="{{ user.role }}" readonly>
                     </div>
                     
                     <div class="form-group">

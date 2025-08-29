@@ -28,7 +28,7 @@
         {% endif %}
         
         <div class="article-content">
-            {{ article.content|raw }}
+            {{ article.content}}
         </div>
         
         {% if user and user.role == 'admin' %}
@@ -73,6 +73,7 @@
                 {% endif %}
                 
                 <form method="post">
+                    {{ csrf_field() }}
                     
                     <div class="form-group mb-3">
                         <label for="content">Commentaire</label>
