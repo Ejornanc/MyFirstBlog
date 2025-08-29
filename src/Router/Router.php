@@ -14,7 +14,7 @@ class Router
 {
     public static function defineRoutes($router)
     {
-         // Initialize controllers
+        // Initialize controllers
         $blogController = new BlogController();
         $homeController = new HomeController();
         $userController = new UserController();
@@ -30,15 +30,15 @@ class Router
         $router->map('GET', '/', [$homeController, 'home']);
         $router->map('GET', '/error404', [$errorController, 'error404']);
         $router->map('GET', '/error', [$errorController, 'error404']);
-        
+
         // Blog routes
         $router->map('GET', '/articles', [$blogController, 'articles']);
         $router->map('GET', '/article/[*:slug]-[i:id]', [$blogController, 'article'], 'article');
         $router->map('POST', '/article/[*:slug]-[i:id]', [$blogController, 'article']);
-        
+
         // Contact route
         $router->map('POST', '/contact', [$homeController, 'contact']);
-        
+
         // User authentication routes
         $router->map('GET', '/register', [$userController, 'register']);
         $router->map('POST', '/register', [$userController, 'register']);
@@ -47,7 +47,7 @@ class Router
         $router->map('GET', '/logout', [$userController, 'logout']);
         $router->map('GET', '/profile', [$userController, 'profile']);
         $router->map('POST', '/profile', [$userController, 'profile']);
-        
+
         // Admin routes
         $router->map('GET', '/admin', [$adminController, 'dashboard']);
         $router->map('GET', '/admin/dashboard', [$adminController, 'dashboard']);

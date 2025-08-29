@@ -23,51 +23,51 @@ class UserModel
     {
         $stmt = $this->pdo->query('SELECT * FROM user ORDER BY created_at DESC');
         $rows = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
-        return array_map(fn($row) => $this->createUserFromData($row), $rows);
+        return array_map(fn ($row) => $this->createUserFromData($row), $rows);
     }
 
     public function getUser(int $id): ?User
     {
-        $query = $this->pdo->prepare("SELECT * FROM user WHERE id = :id");
+        $query = $this->pdo->prepare('SELECT * FROM user WHERE id = :id');
         $query->execute([
-            "id" => $id,
+            'id' => $id,
         ]);
         $userData = $query->fetch();
-        
+
         if (!$userData) {
             return null;
         }
-        
+
         return $this->createUserFromData($userData);
     }
 
     public function getUserByEmail(string $email): ?User
     {
-        $query = $this->pdo->prepare("SELECT * FROM user WHERE email = :email");
+        $query = $this->pdo->prepare('SELECT * FROM user WHERE email = :email');
         $query->execute([
-            "email" => $email,
+            'email' => $email,
         ]);
         $userData = $query->fetch();
-        
+
         if (!$userData) {
             return null;
         }
-        
+
         return $this->createUserFromData($userData);
     }
 
     public function getUserByUsername(string $username): ?User
     {
-        $query = $this->pdo->prepare("SELECT * FROM user WHERE username = :username");
+        $query = $this->pdo->prepare('SELECT * FROM user WHERE username = :username');
         $query->execute([
-            "username" => $username,
+            'username' => $username,
         ]);
         $userData = $query->fetch();
-        
+
         if (!$userData) {
             return null;
         }
-        
+
         return $this->createUserFromData($userData);
     }
 
@@ -75,15 +75,15 @@ class UserModel
     {
         // Hash the password before storing
         $hashedPassword = password_hash($user->getPassword(), PASSWORD_DEFAULT);
-        
-        $query = $this->pdo->prepare("
+
+        $query = $this->pdo->prepare('
             INSERT INTO user (username, email, password, role, created_at, updated_at) 
             VALUES (:username, :email, :password, :role, :created_at, :updated_at)
-        ");
-        
+        ');
+
         $now = new \DateTime();
         $dateStr = $now->format('Y-m-d H:i:s');
-        
+
         return $query->execute([
             'username' => $user->getUsername(),
             'email' => $user->getEmail(),
@@ -96,17 +96,17 @@ class UserModel
 
     public function updateUser(User $user): bool
     {
-        $query = $this->pdo->prepare("
+        $query = $this->pdo->prepare('
             UPDATE user 
             SET username = :username, 
                 email = :email, 
                 role = :role, 
                 updated_at = :updated_at
             WHERE id = :id
-        ");
-        
+        ');
+
         $now = new \DateTime();
-        
+
         return $query->execute([
             'id' => $user->getId(),
             'username' => $user->getUsername(),
@@ -119,13 +119,13 @@ class UserModel
     public function updatePassword(User $user, string $newPassword): bool
     {
         $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
-        
-        $query = $this->pdo->prepare("
+
+        $query = $this->pdo->prepare('
             UPDATE user 
             SET password = :password
             WHERE id = :id
-        ");
-        
+        ');
+
         return $query->execute([
             'id' => $user->getId(),
             'password' => $hashedPassword,
@@ -134,7 +134,7 @@ class UserModel
 
     public function deleteUser(int $id): bool
     {
-        $query = $this->pdo->prepare("DELETE FROM user WHERE id = :id");
+        $query = $this->pdo->prepare('DELETE FROM user WHERE id = :id');
         return $query->execute(['id' => $id]);
     }
 
@@ -150,15 +150,15 @@ class UserModel
             ->setUsername($userData['username'])
             ->setEmail($userData['email'])
             ->setPassword($userData['password']);
-            
+
         if (isset($userData['role'])) {
             $user->setRole($userData['role']);
         }
-        
+
         if (isset($userData['created_at'])) {
             $user->setCreatedAtFromString($userData['created_at']);
         }
-        
+
         return $user;
     }
 }

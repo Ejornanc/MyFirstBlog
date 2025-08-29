@@ -17,23 +17,23 @@ class ArticleModel
 
     public function getArticle(int $id): ?Article
     {
-        $query = $this->pdo->prepare("SELECT a.*, u.username FROM article a LEFT JOIN user u ON u.id = a.user_id WHERE a.id = :id");
+        $query = $this->pdo->prepare('SELECT a.*, u.username FROM article a LEFT JOIN user u ON u.id = a.user_id WHERE a.id = :id');
         $query->execute([
-            "id" => $id,
+            'id' => $id,
         ]);
         $query->setFetchMode(PDO::FETCH_ASSOC);
         $articleData = $query->fetch();
         if (!$articleData) {
             return null;
         }
-        
+
         $article = new Article();
         $article->setId($articleData['id'])
             ->setTitle($articleData['title'] ?? null)
             ->setChapo($articleData['chapo'] ?? null)
             ->setContent($articleData['content'] ?? null)
             ->setDateFromString($articleData['date'] ?? null);
-        
+
         // Map author from joined user username
         if (isset($articleData['username'])) {
             $article->setAuthor($articleData['username']);
@@ -53,8 +53,9 @@ class ArticleModel
         return $article;
     }
 
-    public function getAllArticles(){
-        $query = $this->pdo->prepare("SELECT a.*, u.username FROM article a LEFT JOIN user u ON u.id = a.user_id ORDER BY a.date DESC");
+    public function getAllArticles()
+    {
+        $query = $this->pdo->prepare('SELECT a.*, u.username FROM article a LEFT JOIN user u ON u.id = a.user_id ORDER BY a.date DESC');
         $query->execute();
         $query->setFetchMode(PDO::FETCH_ASSOC);
         $articlesDb = $query->fetchAll();  // Utilisation de fetchAll() pour récupérer tous les articles
@@ -65,46 +66,46 @@ class ArticleModel
                 ->setTitle($articleDb['title'])
                 ->setContent($articleDb['content'])
                 ->setDateFromString($articleDb['date']);
-                
+
             // Set new fields if they exist in the database
             if (isset($articleDb['chapo'])) {
                 $article->setChapo($articleDb['chapo']);
             }
-            
+
             // Map author from joined user username
             if (isset($articleDb['username'])) {
                 $article->setAuthor($articleDb['username']);
                 $article->username = $articleDb['username'];
             }
-            
+
             if (isset($articleDb['updated_at'])) {
                 $article->setUpdatedAtFromString($articleDb['updated_at']);
             }
-            
+
             if (isset($articleDb['slug'])) {
                 $article->setSlug($articleDb['slug']);
             }
-            
+
             if (isset($articleDb['actif'])) {
                 $article->setActif($articleDb['actif']);
             }
-            
+
             $articles[] = $article;
         }
 
         return $articles;
     }
-    
+
     public function createArticle(Article $article, int $userId): bool
     {
-        $query = $this->pdo->prepare("
+        $query = $this->pdo->prepare('
             INSERT INTO article (title, chapo, content, user_id, date) 
             VALUES (:title, :chapo, :content, :user_id, :date)
-        ");
-        
+        ');
+
         $now = new \DateTime();
         $dateStr = $now->format('Y-m-d H:i:s');
-        
+
         return $query->execute([
             'title' => $article->getTitle(),
             'chapo' => $article->getChapo(),
@@ -113,17 +114,17 @@ class ArticleModel
             'date' => $dateStr,
         ]);
     }
-    
+
     public function updateArticle(Article $article): bool
     {
-        $query = $this->pdo->prepare("
+        $query = $this->pdo->prepare('
             UPDATE article 
             SET title = :title, 
                 chapo = :chapo, 
                 content = :content
             WHERE id = :id
-        ");
-        
+        ');
+
         return $query->execute([
             'id' => $article->getId(),
             'title' => $article->getTitle(),
@@ -131,10 +132,10 @@ class ArticleModel
             'content' => $article->getContent(),
         ]);
     }
-    
+
     public function deleteArticle(int $id): bool
     {
-        $query = $this->pdo->prepare("DELETE FROM article WHERE id = :id");
+        $query = $this->pdo->prepare('DELETE FROM article WHERE id = :id');
         return $query->execute(['id' => $id]);
     }
 }

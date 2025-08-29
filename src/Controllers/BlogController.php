@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Controllers;
+
 use App\Entity\Comment;
 use App\Models\ArticleModel;
 use App\Models\CommentModel;
@@ -9,25 +10,25 @@ class BlogController extends ParentController
 {
     private ArticleModel $articleModel;
     private CommentModel $commentModel;
-    
+
     public function __construct()
     {
         $this->articleModel = new ArticleModel();
         $this->commentModel = new CommentModel();
     }
-    
+
     public function articles()
     {
         $articles = $this->articleModel->getAllArticles();
 
         // Add URLs to articles
         foreach ($articles as $article) {
-            $article->url = "/article/" . $article->getSlug() . "-" . $article->getId();
+            $article->url = '/article/' . $article->getSlug() . '-' . $article->getId();
         }
 
         $this->render('blog/articles', [
-            "articles" => $articles,
-            "user" => \App\Middleware\AuthMiddleware::getUser(),
+            'articles' => $articles,
+            'user' => \App\Middleware\AuthMiddleware::getUser(),
         ]);
     }
 
@@ -41,7 +42,7 @@ class BlogController extends ParentController
             header('Location: /error404');
             exit;
         }
-        
+
         // Handle comment submission (requires logged-in user due to schema user_id NOT NULL)
         if ($this->isPost()) {
             // CSRF check
@@ -51,12 +52,12 @@ class BlogController extends ParentController
             }
 
             /** @var Comment $comment */
-            $comment = $this->hydrateFromForm (Comment::class);
-            
+            $comment = $this->hydrateFromForm(Comment::class);
+
             if (empty($comment->getContent())) {
                 $errors[] = 'Comment is required';
             }
-            
+
             // If no errors, attempt to save comment only if user is logged in
             $user = \App\Middleware\AuthMiddleware::getUser();
             if (empty($errors)) {

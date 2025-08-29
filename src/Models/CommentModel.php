@@ -43,7 +43,7 @@ class CommentModel
         $sql .= ' ORDER BY c.created_at DESC';
         $stmt = $this->pdo->query($sql);
         $rows = $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
-        return array_map(fn($row) => $this->mapRowToComment($row), $rows);
+        return array_map(fn ($row) => $this->mapRowToComment($row), $rows);
     }
 
     /**
@@ -52,11 +52,11 @@ class CommentModel
      */
     public function getCommentsByArticleId(int $articleId, bool $onlyApproved = true): array
     {
-        $sql = "SELECT c.*, u.username FROM comments c INNER JOIN user u ON u.id = c.user_id WHERE c.article_id = :article_id";
+        $sql = 'SELECT c.*, u.username FROM comments c INNER JOIN user u ON u.id = c.user_id WHERE c.article_id = :article_id';
         if ($onlyApproved) {
-            $sql .= " AND c.is_approved = 1";
+            $sql .= ' AND c.is_approved = 1';
         }
-        $sql .= " ORDER BY c.created_at DESC";
+        $sql .= ' ORDER BY c.created_at DESC';
 
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute(['article_id' => $articleId]);
@@ -136,9 +136,9 @@ class CommentModel
      */
     public function countCommentsByArticleId(int $articleId, bool $onlyApproved = true): int
     {
-        $sql = "SELECT COUNT(*) as cnt FROM comments WHERE article_id = :article_id";
+        $sql = 'SELECT COUNT(*) as cnt FROM comments WHERE article_id = :article_id';
         if ($onlyApproved) {
-            $sql .= " AND is_approved = 1";
+            $sql .= ' AND is_approved = 1';
         }
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute(['article_id' => $articleId]);
@@ -151,7 +151,7 @@ class CommentModel
      */
     public function countPendingCommentsByArticleId(int $articleId): int
     {
-        $sql = "SELECT COUNT(*) as cnt FROM comments WHERE article_id = :article_id AND is_approved = 0";
+        $sql = 'SELECT COUNT(*) as cnt FROM comments WHERE article_id = :article_id AND is_approved = 0';
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute(['article_id' => $articleId]);
         $row = $stmt->fetch(PDO::FETCH_ASSOC);

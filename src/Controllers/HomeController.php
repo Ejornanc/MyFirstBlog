@@ -9,7 +9,7 @@ class HomeController extends ParentController
     public function home()
     {
         $user = AuthMiddleware::getUser();
-        
+
         // Personal information to display on the homepage
         $personalInfo = [
             'name' => 'Alexandre Delcroix',
@@ -23,13 +23,13 @@ class HomeController extends ParentController
                 'linkedin' => 'https://www.linkedin.com/in/alexandre-delcroix-488709216/',
             ],
         ];
-        
+
         // Retrieve flash messages for contact form (then clear them)
         $contactErrors = $_SESSION['contact_errors'] ?? [];
         $contactSuccess = $_SESSION['contact_success'] ?? false;
         $contactOld = $_SESSION['contact_old'] ?? ['name' => '', 'email' => '', 'message' => ''];
         unset($_SESSION['contact_errors'], $_SESSION['contact_success'], $_SESSION['contact_old']);
-        
+
         $this->render('home', [
             'user' => $user,
             'personalInfo' => $personalInfo,
@@ -39,7 +39,7 @@ class HomeController extends ParentController
             'old' => $contactOld,
         ]);
     }
-    
+
     public function contact()
     {
         // Only accept POST; redirect to home otherwise
@@ -47,40 +47,40 @@ class HomeController extends ParentController
             header('Location: /#contact');
             exit;
         }
-        
+
         $errors = [];
         $success = false;
-        
+
         // CSRF validation
         $token = $_POST['csrf_token'] ?? null;
         if (!\App\Security\Csrf::validate($token)) {
             $errors[] = 'Invalid CSRF token';
         }
-        
+
         // Process form submission
         $name = trim($_POST['name'] ?? '');
         $email = trim($_POST['email'] ?? '');
         $message = trim($_POST['message'] ?? '');
-        
+
         // Validate inputs
         if ($name === '') {
             $errors[] = 'Name is required';
         }
-        
+
         if ($email === '') {
             $errors[] = 'Email is required';
         } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $errors[] = 'Invalid email format';
         }
-        
+
         if ($message === '') {
             $errors[] = 'Message is required';
         }
-        
+
         if (count($errors) === 0) {
             $success = true;
         }
-        
+
         // Store flash data in session and redirect to home (#contact)
         $_SESSION['contact_success'] = $success;
         $_SESSION['contact_errors'] = $errors;
@@ -89,7 +89,7 @@ class HomeController extends ParentController
             'email' => $email,
             'message' => $message,
         ];
-        
+
         header('Location: /#contact');
         exit;
     }
