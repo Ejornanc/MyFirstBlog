@@ -28,6 +28,12 @@ class UserController extends ParentController
         
         // Process form submission
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // CSRF check
+            $token = $_POST['csrf_token'] ?? null;
+            if (!\App\Security\Csrf::validate($token)) {
+                $errors[] = 'Invalid CSRF token';
+            }
+
             $username = $_POST['username'] ?? '';
             $email = $_POST['email'] ?? '';
             $password = $_POST['password'] ?? '';
@@ -97,6 +103,12 @@ class UserController extends ParentController
         
         // Process form submission
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // CSRF check
+            $token = $_POST['csrf_token'] ?? null;
+            if (!\App\Security\Csrf::validate($token)) {
+                $errors[] = 'Invalid CSRF token';
+            }
+
             $email = $_POST['email'] ?? '';
             $password = $_POST['password'] ?? '';
             
@@ -156,6 +168,12 @@ class UserController extends ParentController
         
         // Process form submission
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // CSRF check
+            $token = $_POST['csrf_token'] ?? null;
+            if (!\App\Security\Csrf::validate($token)) {
+                $errors[] = 'Invalid CSRF token';
+            }
+
             $username = $_POST['username'] ?? '';
             $email = $_POST['email'] ?? '';
             

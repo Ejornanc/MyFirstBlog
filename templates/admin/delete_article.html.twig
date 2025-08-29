@@ -36,6 +36,7 @@
             
             <div class="action-buttons">
                 <form method="post">
+                    {{ csrf_field() }}
                     <a href="/admin/dashboard" class="btn btn-secondary">Annuler</a>
                     <button type="submit" class="btn btn-danger">Confirmer la suppression</button>
                 </form>

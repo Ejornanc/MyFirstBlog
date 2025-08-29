@@ -55,9 +55,11 @@
                             <td>{{ comment.date|date('d/m/Y H:i') }}</td>
                             <td>
                                 <form method="post" action="/admin/comment/approve/{{ comment.id }}?redirect=/admin/article/{{ article.id }}/comments" style="display:inline-block; margin-right:6px;">
+                                                                    {{ csrf_field() }}
                                     <button type="submit" class="btn btn-sm btn-success">Valider</button>
                                 </form>
                                 <form method="post" action="/admin/comment/delete/{{ comment.id }}?redirect=/admin/article/{{ article.id }}/comments" style="display:inline-block" onsubmit="return confirm('Supprimer ce commentaire ? Cette action est irréversible.');">
+                                                                    {{ csrf_field() }}
                                     <button type="submit" class="btn btn-sm btn-danger">Supprimer</button>
                                 </form>
                             </td>

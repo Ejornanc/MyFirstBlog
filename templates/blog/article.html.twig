@@ -73,6 +73,7 @@
                 {% endif %}
                 
                 <form method="post">
+                    {{ csrf_field() }}
                     
                     <div class="form-group mb-3">
                         <label for="content">Commentaire</label>

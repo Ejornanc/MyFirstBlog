@@ -44,6 +44,12 @@ class BlogController extends ParentController
         
         // Handle comment submission (requires logged-in user due to schema user_id NOT NULL)
         if ($this->isPost()) {
+            // CSRF check
+            $token = $_POST['csrf_token'] ?? null;
+            if (!\App\Security\Csrf::validate($token)) {
+                $errors[] = 'Invalid CSRF token';
+            }
+
             /** @var Comment $comment */
             $comment = $this->hydrateFromForm (Comment::class);
             

@@ -2,7 +2,9 @@
 
 namespace App\Controllers;
 
+use App\Security\Csrf;
 use DateTimeInterface;
+use Twig\TwigFunction;
 
 abstract class ParentController
 {
@@ -10,9 +12,18 @@ abstract class ParentController
     {
         $loader = new \Twig\Loader\FilesystemLoader(realpath(__DIR__ . '/../../templates'));
         $twig = new \Twig\Environment($loader, [
+            'autoescape' => 'html',
+            // In production you may enable cache, debug=false
         ]);
 
-        echo $twig->render($view.'.html.twig', $params);
+        // Expose csrf token and a helper to render the hidden field
+        $twig->addGlobal('csrf_token', Csrf::getToken());
+        $twig->addFunction(new TwigFunction('csrf_field', function (): string {
+            $token = Csrf::getToken();
+            return '<input type="hidden" name="csrf_token" value="' . htmlspecialchars($token, ENT_QUOTES, 'UTF-8') . '">';
+        }, ['is_safe' => ['html']]));
+
+        echo $twig->render($view . '.html.twig', $params);
     }
 
     protected function hydrateFromForm(string $entityClass)
@@ -20,7 +31,7 @@ abstract class ParentController
         $entity = new $entityClass();
         $formData = $_POST ?? [];
         foreach ($formData as $field => $value) {
-            $setter = 'set'.ucfirst($field);
+            $setter = 'set' . ucfirst($field);
             if (method_exists($entity, $setter)) {
                 $entity->$setter($value);
             }
