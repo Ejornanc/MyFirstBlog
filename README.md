@@ -26,8 +26,10 @@ composer install
 
 ### 3. Créer les containers Docker (Mailhog, MySQL, phpMyAdmin)
 
+Le chemin par défaut de la base de données sera le dossier parent du projet. Changez la valeur dans le docker-compose si vous souhaitez le modifier.
+
 ```bash
-docker compose -f docker-compose.yaml -p MyFirstBlog up -d
+docker compose -f docker-compose.yaml -p myfirstblog up -d
 ```
 
 ### 4. Configurer l'environnement
