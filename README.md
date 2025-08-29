@@ -24,7 +24,13 @@ cd MyFirstBlog
 composer install
 ```
 
-### 3. Configurer l'environnement
+### 3. Créer les containers Docker (Mailhog, MySQL, phpMyAdmin)
+
+```bash
+docker compose -f docker-compose.yaml -p MyFirstBlog up -d
+```
+
+### 4. Configurer l'environnement
 
 Modifiez ou vérifiez les paramètres de connexion PDO (host, dbname, user, password) dans la classe Database pour qu’ils correspondent à votre configuration MySQL :
 
@@ -33,12 +39,8 @@ Modifiez ou vérifiez les paramètres de connexion PDO (host, dbname, user, pass
 'root',
 '123user',
 ```
+Importer la base de données qui se trouve dans Data-Bdd.
 
-### 4. Créer les containers Docker (Mailhog, MySQL, phpMyAdmin)
-
-```bash
-docker compose -f docker-compose.yaml -p MyFirstBlog up -d
-```
 
 ## Fonctionnalités
 
