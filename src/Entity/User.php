@@ -15,7 +15,6 @@ class User
     private ?string $password = null;
     private ?string $role = 'user'; // Default role
     private ?DateTimeInterface $createdAt = null;
-    private ?bool $isActive = false;
 
     public function getId(): ?int
     {
