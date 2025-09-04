@@ -1,0 +1,33 @@
+@startuml
+' Diagramme de séquence – Consulter la liste des articles
+
+skinparam shadowing false
+skinparam ArrowColor #3A6EA5
+skinparam lifelineBorderColor #3A6EA5
+skinparam lifelineBackgroundColor #EEF5FF
+
+actor "Visiteur" as V
+participant "Navigateur" as Browser
+participant "public/index.php" as Front
+participant "App\\Router\\Router" as R
+participant "App\\Controllers\\BlogController" as C
+participant "App\\Models\\ArticleModel" as M
+participant "DB (MySQL)" as DB
+
+V -> Browser: GET /articles
+Browser -> Front: Requête HTTP
+Front -> R: Router::defineRoutes(AltoRouter)
+Front -> R: match()
+R -> C: articles()
+activate C
+C -> M: getAllArticles()
+activate M
+M -> DB: SELECT a.*, u.username FROM article ...
+DB --> M: Rows (articles)
+M --> C: Article[]
+deactivate M
+C -> C: Construire URL article (slug-id)
+C --> Browser: Render Twig templates (blog/articles)
+deactivate C
+
+@enduml

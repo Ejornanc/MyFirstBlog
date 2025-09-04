@@ -1,0 +1,212 @@
+@startuml
+' Diagramme de classes – MyFirstBlog (extrait principal)
+' Basé sur le code dans src/
+
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+skinparam classBackgroundColor #FFFDF8
+skinparam classBorderColor #8A5A44
+
+package "Security" {
+  class "App\\Security\\Csrf" as Csrf {
+    +getToken(): string
+    +validate(token: ?string): bool
+  }
+}
+
+package "Middleware" {
+  class "App\\Middleware\\AuthMiddleware" as AuthMiddleware {
+    +isLoggedIn(): bool
+    +isAdmin(): bool
+    +requireLogin(): void
+    +requireAdmin(): void
+    +getUser(): ?array
+    +login(userId: int, username: string, email: string, role: string): void
+    +logout(): void
+  }
+}
+
+package "Database" {
+  class "App\\Database\\Database" as Database {
+    -static pdo: PDO
+    +getConnection(): PDO
+  }
+}
+
+package "Entity" {
+  class "App\\Entity\\Article" as Article {
+    -id: ?int
+    -title: ?string
+    -chapo: ?string
+    -content: ?string
+    -author: ?string
+    -date: ?DateTimeInterface
+    -updatedAt: ?DateTimeInterface
+    -slug: ?string
+    -actif: ?bool
+    +getId(): ?int
+    +setId(id: ?int): static
+    +getTitle(): ?string
+    +setTitle(title: ?string): static
+    +getChapo(): ?string
+    +setChapo(chapo: ?string): static
+    +getContent(): ?string
+    +setContent(content: ?string): static
+    +getAuthor(): ?string
+    +setAuthor(author: ?string): static
+    +getDate(): ?DateTimeInterface
+    +setDate(date: ?DateTimeInterface): self
+    +setDateFromString(date: ?string): self
+    +getUpdatedAt(): ?DateTimeInterface
+    +setUpdatedAt(date: ?DateTimeInterface): static
+    +setUpdatedAtFromString(date: ?string): self
+    +getSlug(): ?string
+    +setSlug(slug: ?string): static
+    +getActif(): ?bool
+    +setActif(actif: ?bool): Article
+  }
+
+  class "App\\Entity\\User" as User {
+    -id: ?int
+    -username: ?string
+    -email: ?string
+    -password: ?string
+    -role: ?string
+    -createdAt: ?DateTimeInterface
+    +getId(): ?int
+    +setId(id: ?int): static
+    +getUsername(): ?string
+    +setUsername(username: ?string): static
+    +getEmail(): ?string
+    +setEmail(email: ?string): static
+    +getPassword(): ?string
+    +setPassword(password: ?string): static
+    +getRole(): ?string
+    +setRole(role: ?string): static
+    +getCreatedAt(): ?DateTimeInterface
+    +setCreatedAt(date: ?DateTimeInterface): static
+    +setCreatedAtFromString(date: ?string): self
+    +isAdmin(): bool
+  }
+
+  class "App\\Entity\\Comment" as Comment {
+    -id: ?int
+    -articleId: ?int
+    -userId: ?int
+    -author: ?string
+    -content: ?string
+    -date: ?DateTimeInterface
+    -isApproved: ?bool
+    +getId(): ?int
+    +setId(id: ?int): static
+    +getArticleId(): ?int
+    +setArticleId(articleId: ?int): static
+    +getUserId(): ?int
+    +setUserId(userId: ?int): static
+    +getAuthor(): ?string
+    +setAuthor(author: ?string): static
+    +getContent(): ?string
+    +setContent(content: ?string): static
+    +getDate(): ?DateTimeInterface
+    +setDate(date: ?DateTimeInterface): static
+    +setDateFromString(date: ?string): self
+    +isApproved(): ?bool
+    +setIsApproved(isApproved: ?bool): static
+  }
+}
+
+package "Models" {
+  class "App\\Models\\ArticleModel" as ArticleModel {
+    -pdo: PDO
+    +__construct()
+    +getArticle(id: int): ?Article
+    +getAllArticles(): Article[]
+    +createArticle(article: Article, userId: int): bool
+    +updateArticle(article: Article): bool
+    +deleteArticle(id: int): bool
+  }
+
+  class "App\\Models\\UserModel" as UserModel {
+    -pdo: PDO
+    +__construct()
+    +getAllUsers(): User[]
+    +getUser(id: int): ?User
+    +getUserByEmail(email: string): ?User
+    +getUserByUsername(username: string): ?User
+    +createUser(user: User): bool
+    +updateUser(user: User): bool
+    +updatePassword(user: User, newPassword: string): bool
+    +deleteUser(id: int): bool
+    +verifyPassword(user: User, password: string): bool
+  }
+
+  class "App\\Models\\CommentModel" as CommentModel {
+    -pdo: PDO
+    +__construct()
+    +getComment(id: int): ?Comment
+    +getAllComments(onlyApproved: bool = false): Comment[]
+    +getCommentsByArticleId(articleId: int, onlyApproved: bool = true): Comment[]
+    +addComment(comment: Comment): bool
+    +updateComment(comment: Comment): bool
+    +approveComment(id: int): bool
+    +rejectComment(id: int): bool
+    +deleteComment(id: int): bool
+    +countCommentsByArticleId(articleId: int, onlyApproved: bool = true): int
+    +countPendingCommentsByArticleId(articleId: int): int
+  }
+}
+
+package "Controllers" {
+  abstract class "App\\Controllers\\ParentController" as ParentController {
+    #render(view: string, params: array)
+    #hydrateFromForm(entityClass: string)
+    #isPost(): bool
+  }
+  class "App\\Controllers\\HomeController" as HomeController
+  class "App\\Controllers\\BlogController" as BlogController
+  class "App\\Controllers\\UserController" as UserController
+  class "App\\Controllers\\AdminController" as AdminController
+  class "App\\Controllers\\ErrorController" as ErrorController
+}
+
+package "Router" {
+  class "App\\Router\\Router" as Router {
+    +defineRoutes(router: AltoRouter)
+  }
+}
+
+' Relations entre couches
+Database <.. ArticleModel : utilise PDO
+Database <.. UserModel
+Database <.. CommentModel
+
+ArticleModel --> Article
+UserModel --> User
+CommentModel --> Comment
+
+HomeController --|> ParentController
+BlogController --|> ParentController
+UserController --|> ParentController
+AdminController --|> ParentController
+ErrorController --|> ParentController
+
+BlogController --> ArticleModel
+BlogController --> CommentModel
+HomeController ..> AuthMiddleware : utilise
+UserController --> UserModel
+UserController ..> AuthMiddleware : login/logout
+AdminController --> ArticleModel
+AdminController --> CommentModel
+AdminController ..> AuthMiddleware : vérifications
+
+AuthMiddleware ..> "Session" : manipule
+Csrf ..> "Session" : lit/écrit token
+ParentController ..> Csrf : expose dans Twig
+
+Router ..> HomeController : mappe routes
+Router ..> BlogController
+Router ..> UserController
+Router ..> AdminController
+Router ..> ErrorController
+
+@enduml

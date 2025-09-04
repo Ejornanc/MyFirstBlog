@@ -1,0 +1,76 @@
+@startuml
+' Diagramme de cas d’utilisation – MyFirstBlog
+' Acteurs principaux: Visiteur, Utilisateur, Administrateur
+
+left to right direction
+skinparam actorStyle awesome
+skinparam packageStyle rectangle
+skinparam usecaseBackgroundColor #F9FBFF
+skinparam usecaseBorderColor #3A6EA5
+skinparam shadowing false
+
+actor "Visiteur" as Visitor
+actor "Utilisateur" as User
+actor "Administrateur" as Admin
+
+package "Zone publique" {
+  usecase "Consulter la page d'accueil" as UC_Home
+  usecase "Lister les articles" as UC_ListArticles
+  usecase "Lire un article" as UC_ReadArticle
+  usecase "Contacter via le formulaire" as UC_Contact
+  usecase "S'inscrire" as UC_Register
+  usecase "Se connecter" as UC_Login
+}
+
+package "Espace utilisateur" {
+  usecase "Consulter/éditer son profil" as UC_Profile
+  usecase "Publier un commentaire" as UC_Comment
+  usecase "Se déconnecter" as UC_Logout
+}
+
+package "Administration" {
+  usecase "Accéder au tableau de bord" as UC_AdminDashboard
+  usecase "Créer un article" as UC_CreateArticle
+  usecase "Éditer un article" as UC_EditArticle
+  usecase "Supprimer un article" as UC_DeleteArticle
+  usecase "Modérer les commentaires" as UC_ModerateComments
+}
+
+' Relations des acteurs
+Visitor --> UC_Home
+Visitor --> UC_ListArticles
+Visitor --> UC_ReadArticle
+Visitor --> UC_Contact
+Visitor --> UC_Register
+Visitor --> UC_Login
+
+User --> UC_Profile
+User --> UC_Comment
+User --> UC_Logout
+
+Admin --> UC_AdminDashboard
+Admin --> UC_CreateArticle
+Admin --> UC_EditArticle
+Admin --> UC_DeleteArticle
+Admin --> UC_ModerateComments
+
+' Contraintes/Spécifications
+UC_Comment .down.> UC_Login : «inclut» (si non connecté)
+UC_Profile .down.> UC_Login : «inclut» (obligatoire)
+UC_AdminDashboard .down.> UC_Login : «inclut» (obligatoire)
+UC_CreateArticle .down.> UC_AdminDashboard : «étend» (depuis dashboard)
+UC_EditArticle .down.> UC_AdminDashboard : «étend»
+UC_DeleteArticle .down.> UC_AdminDashboard : «étend»
+UC_ModerateComments .down.> UC_AdminDashboard : «étend»
+
+note bottom of UC_Comment
+  Seuls les utilisateurs connectés peuvent publier un commentaire.
+  Les commentaires sont soumis puis en attente de modération.
+end note
+
+note right of UC_ModerateComments
+  Actions possibles: approuver, rejeter, supprimer
+  un commentaire.
+end note
+
+@enduml

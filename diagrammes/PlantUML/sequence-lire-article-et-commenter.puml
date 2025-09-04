@@ -1,0 +1,57 @@
+@startuml
+' Diagramme de séquence – Lire un article et publier un commentaire
+
+skinparam shadowing false
+skinparam ArrowColor #3A6EA5
+skinparam lifelineBorderColor #3A6EA5
+skinparam lifelineBackgroundColor #EEF5FF
+
+actor "Utilisateur" as U
+participant "Navigateur" as Browser
+participant "public/index.php" as Front
+participant "App\\Router\\Router" as R
+participant "App\\Controllers\\BlogController" as C
+participant "App\\Models\\ArticleModel" as AM
+participant "App\\Models\\CommentModel" as CM
+participant "DB (MySQL)" as DB
+
+U -> Browser: GET /article/{slug}-{id}
+Browser -> Front: Requête HTTP
+Front -> R: match()
+R -> C: article(slug, id)
+activate C
+C -> AM: getArticle(id)
+activate AM
+AM -> DB: SELECT a.*, u.username FROM article ... WHERE a.id = :id
+DB --> AM: Article row
+AM --> C: Article
+deactivate AM
+C -> CM: getCommentsByArticleId(id, onlyApproved=true)
+activate CM
+CM -> DB: SELECT ... FROM comments WHERE article_id = :id AND is_approved=1
+DB --> CM: Comments rows
+CM --> C: Comment[]
+deactivate CM
+C --> Browser: Render Twig templates (blog/article)
+
+== Soumission d'un commentaire ==
+U -> Browser: POST /article/{slug}-{id} (content, csrf_token)
+Browser -> Front: Requête HTTP POST
+Front -> R: match()
+R -> C: article(slug, id)
+activate C
+C -> C: Csrf::validate(token)
+C -> C: AuthMiddleware::getUser()
+alt Utilisateur non connecté
+  C --> Browser: Afficher erreur "Vous devez être connecté..."
+else OK
+  C -> CM: addComment(Comment{articleId, userId, content, isApproved=false})
+  activate CM
+  CM -> DB: INSERT INTO comments (...)
+  DB --> CM: ok
+  CM --> C: bool
+  deactivate CM
+  C --> Browser: Afficher succès (commentaire en attente)
+end
+
+@enduml

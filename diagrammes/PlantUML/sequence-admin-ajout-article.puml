@@ -1,0 +1,41 @@
+@startuml
+' Diagramme de séquence – Admin: Ajouter un article
+
+skinparam shadowing false
+skinparam ArrowColor #3A6EA5
+skinparam lifelineBorderColor #3A6EA5
+skinparam lifelineBackgroundColor #EEF5FF
+
+actor "Administrateur" as A
+participant "Navigateur" as Browser
+participant "public/index.php" as Front
+participant "App\\Router\\Router" as R
+participant "App\\Controllers\\AdminController" as C
+participant "App\\Models\\ArticleModel" as M
+participant "App\\Middleware\\AuthMiddleware" as Auth
+participant "DB (MySQL)" as DB
+
+A -> Browser: GET /admin/article/add
+Browser -> Front: Requête HTTP
+Front -> R: match()
+R -> C: addArticle()
+C -> Auth: requireAdmin() [vérification]
+C --> Browser: Afficher formulaire d'ajout (Twig)
+
+== Soumission ==
+A -> Browser: POST /admin/article/add (title,chapo,content,csrf_token)
+Browser -> Front: Requête HTTP POST
+Front -> R: match()
+R -> C: addArticle()
+activate C
+C -> C: Csrf::validate(token)
+C -> Auth: getUser()
+C -> M: createArticle(Article, userId)
+activate M
+M -> DB: INSERT INTO article (...)
+DB --> M: ok
+M --> C: bool
+deactivate M
+C --> Browser: Afficher succès
+
+@enduml
