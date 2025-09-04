@@ -1,0 +1,45 @@
+@startuml
+' Diagramme de séquence – Authentification (login)
+
+skinparam shadowing false
+skinparam ArrowColor #3A6EA5
+skinparam lifelineBorderColor #3A6EA5
+skinparam lifelineBackgroundColor #EEF5FF
+
+actor "Visiteur" as V
+participant "Navigateur" as Browser
+participant "public/index.php" as Front
+participant "App\\Router\\Router" as R
+participant "App\\Controllers\\UserController" as C
+participant "App\\Models\\UserModel" as M
+participant "App\\Middleware\\AuthMiddleware" as Auth
+participant "DB (MySQL)" as DB
+
+V -> Browser: GET /login
+Browser -> Front: Requête HTTP
+Front -> R: match()
+R -> C: login()
+C --> Browser: Afficher le formulaire (Twig)
+
+== Soumission ==
+V -> Browser: POST /login (email, password, csrf_token)
+Browser -> Front: Requête HTTP POST
+Front -> R: match()
+R -> C: login()
+activate C
+C -> C: Csrf::validate(token)
+C -> M: getUserByEmail(email)
+activate M
+M -> DB: SELECT * FROM user WHERE email=:email
+DB --> M: User row/NULL
+M --> C: User|null
+deactivate M
+alt User introuvable OU mauvais mot de passe
+  C --> Browser: Afficher erreurs
+else Succès
+  C -> Auth: login(id, username, email, role)
+  Auth -> Auth: session_regenerate_id(true)
+  C --> Browser: Redirect / (302)
+end
+
+@enduml
