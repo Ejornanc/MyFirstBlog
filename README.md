@@ -45,6 +45,12 @@ DB_USER=user
 DB_PASS=mdp
 DB_CHARSET=utf8mb4
 ```
+Alternative (optionnelle) : DATABASE_URL
+
+```
+DATABASE_URL=mysql://user:mdp@mysql:3306/blog?charset=utf8mb4
+```
+
 Importer la base de données qui se trouve dans Data-Bdd (cela va créer la base de données blog).
 
 
