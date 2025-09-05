@@ -5,8 +5,6 @@ namespace App\Service;
 use PHPMailer\PHPMailer\Exception;
 use PHPMailer\PHPMailer\PHPMailer;
 
-require __DIR__ . '/../vendor/autoload.php';
-
 class Mailer
 {
     private $mailer;
