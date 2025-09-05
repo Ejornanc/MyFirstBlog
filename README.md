@@ -45,7 +45,7 @@ DB_USER=user
 DB_PASS=mdp
 DB_CHARSET=utf8mb4
 ```
-Importer la base de données qui se trouve dans Data-Bdd.
+Importer la base de données qui se trouve dans Data-Bdd (cela va créer la base de données blog).
 
 
 ## Mail (PHPMailer + MailHog)
