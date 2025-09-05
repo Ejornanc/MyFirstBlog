@@ -5,6 +5,13 @@ require '../vendor/autoload.php';
 use App\Controllers\ErrorController;
 use App\Router\Router;
 
+$root = dirname(__DIR__);
+
+if (file_exists($root.'/.env')) {
+    $dotenv = Dotenv\Dotenv::createImmutable($root);
+    $dotenv->safeLoad(); // ne jette pas d’erreur si manquant
+}
+
 // Session cookie hardening (must be set before session_start in Router)
 ini_set('session.cookie_httponly', '1');
 $secure = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || (($_SERVER['SERVER_PORT'] ?? 80) == 443);

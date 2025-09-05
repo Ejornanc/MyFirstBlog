@@ -34,12 +34,16 @@ docker compose -f docker-compose.yaml -p myfirstblog up -d
 
 ### 4. Configurer l'environnement
 
-Modifiez ou vérifiez les paramètres de connexion PDO (host, dbname, user, password) dans la classe Database pour qu’ils correspondent à votre configuration MySQL :
+Modifiez ou vérifiez les paramètres de connexion PDO (host, dbname, user, password) dans le ficher .env pour qu’ils correspondent à votre configuration MySQL :
 
 ```
-'mysql:host=mysql;dbname=blog;charset=utf8',
-'root',
-'123user',
+DB_DRIVER=mysql
+DB_HOST=mysql
+DB_PORT=3306
+DB_NAME=blog
+DB_USER=user
+DB_PASS=mdp
+DB_CHARSET=utf8mb4
 ```
 Importer la base de données qui se trouve dans Data-Bdd.
 
