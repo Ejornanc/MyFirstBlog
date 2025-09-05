@@ -44,6 +44,29 @@ Modifiez ou vérifiez les paramètres de connexion PDO (host, dbname, user, pass
 Importer la base de données qui se trouve dans Data-Bdd.
 
 
+## Mail (PHPMailer + MailHog)
+
+- Un service MailHog est fourni via Docker pour intercepter les emails de développement.
+- L’UI est accessible sur http://localhost:8025 et le SMTP écoute sur localhost:1025 depuis l’hôte.
+- Le code utilise PHPMailer configuré en SMTP vers le service `mailhog` (réseau Docker) sans auth ni TLS.
+- Le formulaire de contact envoie un email vers contact@mon-site.test qui sera visible dans MailHog.
+
+Override via variables d’environnement (facultatif):
+- SMTP_HOST (défaut: mailhog)
+- SMTP_PORT (défaut: 1025)
+- MAIL_FROM_EMAIL (défaut: no-reply@mon-site.test)
+- MAIL_FROM_NAME (défaut: Mon Site)
+
+Lancer les conteneurs:
+```
+docker compose up -d
+```
+
+Vérifier l’envoi:
+1. Ouvrir http://localhost:8080
+2. Soumettre le formulaire Contact
+3. Ouvrir http://localhost:8025 pour voir le message
+
 ## Fonctionnalités
 
 - Gestion du blog : création, modification et suppression d’articles

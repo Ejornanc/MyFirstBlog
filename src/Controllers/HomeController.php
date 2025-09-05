@@ -3,6 +3,9 @@
 namespace App\Controllers;
 
 use App\Middleware\AuthMiddleware;
+use App\Service\Mailer;
+
+// PHPMailer wrapper
 
 class HomeController extends ParentController
 {
@@ -78,7 +81,20 @@ class HomeController extends ParentController
         }
 
         if (count($errors) === 0) {
-            $success = true;
+            // Send email via MailHog using PHPMailer
+            $mailer = new Mailer();
+            $subject = 'Nouveau message de contact';
+            $body = "<p><strong>Nom:</strong> " . htmlspecialchars($name, ENT_QUOTES, 'UTF-8') . "</p>"
+                  . "<p><strong>Email:</strong> " . htmlspecialchars($email, ENT_QUOTES, 'UTF-8') . "</p>"
+                  . "<p><strong>Message:</strong><br>" . nl2br(htmlspecialchars($message, ENT_QUOTES, 'UTF-8')) . "</p>";
+
+            $sendResult = $mailer->send('contact@mon-site.test', $subject, $body);
+            if ($sendResult === true) {
+                $success = true;
+            } else {
+                $errors[] = is_string($sendResult) ? $sendResult : 'Une erreur inconnue est survenue lors de l\'envoi de l\'email.';
+                $success = false;
+            }
         }
 
         // Store flash data in session and redirect to home (#contact)
