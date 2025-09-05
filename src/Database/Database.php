@@ -15,8 +15,8 @@ class Database
             try {
                 self::$pdo = new PDO(
                     'mysql:host=mysql;dbname=blog;charset=utf8',
-                    'root',
-                    '123user',
+                    'user',
+                    'mdp',
                     [
                         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, // Active les erreurs SQL
                         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC, // Retourne les résultats sous forme de tableau associatif
